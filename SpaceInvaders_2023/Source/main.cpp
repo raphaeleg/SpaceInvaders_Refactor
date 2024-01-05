@@ -4,20 +4,18 @@
 constexpr float SCREEN_HEIGHT = 1080.0f;
 constexpr float SCREEN_WIDTH = 1920.0f;
 
-int main(void)
-{
+int main(void) {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "SPACE INVADERS");
 
     SetTargetFPS(60);
 
-    Game game = { State::STARTSCREEN };
+    Game game = Game();
 
-    while (!WindowShouldClose())
-    {
+    while (!WindowShouldClose()) {
         game.Update();
         BeginDrawing();
         ClearBackground(BLACK);
-        game.Render();
+		game.Render();
         EndDrawing();
     }
 

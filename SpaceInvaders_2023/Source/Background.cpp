@@ -1,47 +1,30 @@
 #include "Background.h"
 
-void Star::Update(float starOffset)
-{
-	position.x = initPosition.x + starOffset;
-	position.y = initPosition.y;
+Background::Background() noexcept {
+    for (int i = 0; i < starAmount; i++) {
+        const Vector2 tmpPos{ GetRandomValue(-150, GetScreenWidth() + 150), GetRandomValue(0, GetScreenHeight()) };
+        const float tmpSize = GetRandomValue(1.0f, 4.0f) / 2.0f;
+        Stars.push_back(Star(tmpPos, tmpSize));
+    }
 }
 
-void Star::Render()
-{
-	DrawCircle((int)position.x, (int)position.y, size, color);
+void Background::Update(float offset) noexcept {
+    for (auto& star : Stars) {
+        star.Update(offset);
+    }
 }
 
-
-void Background::Initialize(int starAmount)
-{
-	for (int i = 0; i < starAmount; i++)
-	{
-		Star newStar;
-
-		newStar.initPosition.x = GetRandomValue(-150, GetScreenWidth() + 150);
-		newStar.initPosition.y = GetRandomValue(0, GetScreenHeight());
-
-		newStar.color = SKYBLUE;
-
-		newStar.size = GetRandomValue(1, 4) / static_cast<float>(2);
-
-		Stars.push_back(newStar);
-
-	}
+void Background::Render() noexcept {
+    for (auto& star : Stars) {
+        star.Render();
+    }
 }
 
-void Background::Update(float offset)
-{
-	for (auto& star : Stars)
-	{
-		star.Update(offset);
-	}
+void Star::Update(float offset) noexcept {
+    position.x = initPosition.x + offset;
+    position.y = initPosition.y;
 }
 
-void Background::Render()
-{
-	for (auto& star : Stars)
-	{
-		star.Render();
-	}
+void Star::Render() noexcept{
+    DrawCircle(static_cast<int>(position.x), static_cast<int>(position.y), size, SKYBLUE);
 }

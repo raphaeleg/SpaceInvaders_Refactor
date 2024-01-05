@@ -17,9 +17,7 @@ void Game::Start()
 
 	SpawnAliens();
 
-	Background newBackground;
-	newBackground.Initialize(600);
-	background = newBackground;
+	background = Background();
 
 	score = 0;
 

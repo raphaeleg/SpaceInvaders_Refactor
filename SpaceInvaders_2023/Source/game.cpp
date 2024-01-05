@@ -11,6 +11,7 @@ void Game::Start()
 	float window_width = (float)GetScreenWidth();
 	float window_height = (float)GetScreenHeight();
 	float wall_distance = window_width / (wallCount + 1);
+
 	for (int i = 0; i < wallCount; i++)
 	{
 		Wall newWalls;
@@ -26,12 +27,13 @@ void Game::Start()
 
 	SpawnAliens();
 
-
 	Background newBackground;
 	newBackground.Initialize(600);
 	background = newBackground;
 
 	score = 0;
+
+	leaderboard = Leaderboard();
 
 	gameState = State::GAMEPLAY;
 }
@@ -41,7 +43,7 @@ void Game::End()
 	Projectiles.clear();
 	Walls.clear();
 	Aliens.clear();
-	newHighScore = CheckNewHighScore();
+	newHighScore = leaderboard.CheckNewHighScore(score);
 	gameState = State::ENDSCREEN;
 }
 
@@ -64,8 +66,8 @@ void Game::Update()
 		{
 			Start();
 		}
-
 		break;
+
 	case State::GAMEPLAY:
 		if (IsKeyReleased(KEY_Q))
 		{
@@ -98,7 +100,6 @@ void Game::Update()
 		cornerPos = { 0, (float)player.player_base_height };
 		offset = lineLength(playerPos, cornerPos) * -1;
 		background.Update(offset / 15);
-
 
 		for (auto& projectile : Projectiles)
 		{
@@ -197,6 +198,7 @@ void Game::Update()
 			}
 		}
 		break;
+
 	case State::ENDSCREEN:
 		if (IsKeyReleased(KEY_ENTER) && !newHighScore)
 		{
@@ -219,7 +221,7 @@ void Game::Update()
 					if ((key >= 32) && (key <= 125) && (letterCount < 9))
 					{
 						name[letterCount] = (char)key;
-						name[letterCount+1] = '\0';
+						name[letterCount + 1] = '\0';
 						letterCount++;
 					}
 
@@ -248,7 +250,7 @@ void Game::Update()
 			{
 				std::string nameEntry(name);
 
-				InsertNewHighScore(nameEntry);
+				leaderboard.InsertNewHighScore(nameEntry, score);
 
 				newHighScore = false;
 			}
@@ -335,11 +337,11 @@ void Game::Render()
 
 			DrawText("LEADERBOARD", 50, 100, 40, YELLOW);
 
-			for (int i = 0; i < Leaderboard.size(); i++)
+			for (int i = 0; i < leaderboard.list.size(); i++)
 			{
-				char* tempNameDisplay = Leaderboard.at(i).name.data();
+				char* tempNameDisplay = leaderboard.list[i].name.data();
 				DrawText(tempNameDisplay, 50, 140 + (i * 40), 40, YELLOW);
-				DrawText(TextFormat("%i", Leaderboard.at(i).score), 350, 140 + (i * 40), 40, YELLOW);
+				DrawText(TextFormat("%i", leaderboard.list[i].score), 350, 140 + (i * 40), 40, YELLOW);
 			}
 		}
 		break;
@@ -358,195 +360,5 @@ void Game::SpawnAliens()
 			newAlien.position.y = formationY + (row * alienSpacing);
 			Aliens.push_back(newAlien);
 		}
-	}
-
-}
-
-bool Game::CheckNewHighScore()
-{
-	if (score > Leaderboard.at(4).score)
-	{
-		return true;
-	}
-	return false;
-}
-
-void Game::InsertNewHighScore(std::string name)
-{
-	PlayerData newData;
-	newData.name = name;
-	newData.score = score;
-
-	for (int i = 0; i < Leaderboard.size(); i++)
-	{
-		if (newData.score > Leaderboard.at(i).score)
-		{
-			Leaderboard.insert(Leaderboard.begin() + i, newData);
-
-			Leaderboard.pop_back();
-
-			i = Leaderboard.size();
-		}
-	}
-}
-
-void Player::Initialize()
-{
-	float window_width = (float)GetScreenWidth();
-	x_pos = window_width / 2;
-}
-
-void Player::Update()
-{
-	direction = 0;
-	if (IsKeyDown(KEY_LEFT))
-	{
-		direction--;
-	}
-	if (IsKeyDown(KEY_RIGHT))
-	{
-		direction++;
-	}
-
-	x_pos += speed * direction;
-
-	if (x_pos < 0 + radius)
-	{
-		x_pos = 0 + radius;
-	}
-	else if (x_pos > GetScreenWidth() - radius)
-	{
-		x_pos = GetScreenWidth() - radius;
-	}
-
-	timer += GetFrameTime();
-
-	if (timer > 0.4 && activeTexture == 2)
-	{
-		activeTexture = 0;
-		timer = 0;
-	}
-	else if (timer > 0.4)
-	{
-		activeTexture++;
-		timer = 0;
-	}
-}
-
-void Player::Render(Texture2D texture)
-{
-	float window_height = GetScreenHeight();
-	DrawTexturePro(texture,{0,0,352,352},{x_pos, window_height - player_base_height,100,100},{50,50},0,WHITE);
-}
-
-void Projectile::Update()
-{
-	position.y -= speed;
-
-	lineStart.y = position.y - 15;
-	lineEnd.y = position.y + 15;
-
-	lineStart.x = position.x;
-	lineEnd.x = position.x;
-
-	if (position.y < 0 || position.y > 1500)
-	{
-		active = false;
-	}
-}
-
-void Projectile::Render(Texture2D texture)
-{
-	DrawTexturePro(texture,{0,0,176,176},{position.x,position.y,50,50}, {25,25},0,WHITE);
-}
-
-void Wall::Render(Texture2D texture)
-{
-	DrawTexturePro(texture,{0,0,704,704},{position.x,position.y,200,200},{100,100},0,WHITE);
-	DrawText(TextFormat("%i", health), position.x - 21, position.y + 10, 40, RED);
-}
-
-void Wall::Update()
-{
-	if (health < 1)
-	{
-		active = false;
-	}
-}
-
-void Alien::Update()
-{
-	int window_width = GetScreenWidth();
-
-	if (moveRight)
-	{
-		position.x += speed;
-
-		if (position.x >= GetScreenWidth())
-		{
-			moveRight = false;
-			position.y += 50;
-		}
-	}
-	else
-	{
-		position.x -= speed;
-
-		if (position.x <= 0)
-		{
-			moveRight = true;
-			position.y += 50;
-		}
-	}
-}
-
-void Alien::Render(Texture2D texture)
-{
-	DrawTexturePro(texture,{0,0,352,352},{position.x,position.y,100,100},{50,50},0,WHITE);
-}
-
-void Star::Update(float starOffset)
-{
-	position.x = initPosition.x + starOffset;
-	position.y = initPosition.y;
-}
-
-void Star::Render()
-{
-	DrawCircle((int)position.x, (int)position.y, size, color);
-}
-
-
-void Background::Initialize(int starAmount)
-{
-	for (int i = 0; i < starAmount; i++)
-	{
-		Star newStar;
-
-		newStar.initPosition.x = GetRandomValue(-150, GetScreenWidth() + 150);
-		newStar.initPosition.y = GetRandomValue(0, GetScreenHeight());
-
-		newStar.color = SKYBLUE;
-
-		newStar.size = GetRandomValue(1, 4) / 2;
-
-		Stars.push_back(newStar);
-
-	}
-}
-
-void Background::Update(float offset)
-{
-	for (auto& star : Stars)
-	{
-		star.Update(offset);
-	}
-}
-
-void Background::Render()
-{
-	for (auto& star : Stars)
-	{
-		star.Render();
 	}
 }

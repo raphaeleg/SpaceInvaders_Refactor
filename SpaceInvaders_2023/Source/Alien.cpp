@@ -1,32 +1,19 @@
 #include "Alien.h"
+#include <corecrt_math.h>
 
-void Alien::Update()
+void Alien::Update() noexcept
 {
-	int window_width = GetScreenWidth();
-
-	if (moveRight)
-	{
-		position.x += speed;
-
-		if (position.x >= GetScreenWidth())
-		{
-			moveRight = false;
-			position.y += 50;
-		}
-	}
-	else
-	{
-		position.x -= speed;
-
-		if (position.x <= 0)
-		{
-			moveRight = true;
-			position.y += 50;
-		}
-	}
+    position.x += speed;
+    if (position.x <= 0 || position.x >= GetScreenWidth())
+    {
+        speed = speed < 0 ? abs(speed) : -speed;
+        position.y += 50;
+    }
 }
 
-void Alien::Render(Texture2D texture)
+void Alien::Render(Texture2D texture) noexcept
 {
-	DrawTexturePro(texture, { 0,0,352,352 }, { position.x,position.y,100,100 }, { 50,50 }, 0, WHITE);
+    const Rectangle DT_src = { 0,0,static_cast<float>(texture.width), static_cast<float>(texture.height) };
+    const Rectangle DT_dst = { position.x, position.y, 100, 100 };
+    DrawTexturePro(texture, DT_src, DT_dst, DT_o, 0, WHITE);
 }

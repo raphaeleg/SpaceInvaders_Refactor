@@ -20,5 +20,5 @@ public:
     void Render(Texture2D texture) noexcept;
     void DecreaseHealth() noexcept { health -= 1; };
     Vector2 GetPosition() const noexcept { return position; };
-    bool IsNotActive() const noexcept { return health < 1; };
+    bool IsDead() const noexcept { return health < 1; };
 };

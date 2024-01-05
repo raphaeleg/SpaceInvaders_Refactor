@@ -4,16 +4,19 @@
 
 struct Projectile
 {
-public:
-    Vector2 position = { 0, 0 };
+private:
     int speed = 15;
+    Vector2 position = { 0, 0 };
+    static constexpr Vector2 DT_o = { 25,25 };
     bool active = true;
-    EntityType type = {};
-
+public:
     Vector2 lineStart = { 0, 0 };
     Vector2 lineEnd = { 0, 0 };
 
-    void Update();
-
-    void Render(Texture2D texture);
+    Projectile(Vector2 pos, bool isPlayerProjectile) noexcept;
+    void Update() noexcept;
+    void Render(Texture2D texture) noexcept;
+    void Hit() noexcept { active = false; }
+    bool IsPlayerProjectile() const noexcept { return speed < 0; }
+    bool IsDead() const noexcept { return !active; }
 };

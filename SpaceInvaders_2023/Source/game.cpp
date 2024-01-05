@@ -1,30 +1,10 @@
 #include "game.h"
+#include "Helper.h"
 #include <iostream>
 #include <vector>
 #include <chrono>
 #include <thread>
 #include <fstream>
-
-float lineLength(Vector2 A, Vector2 B)
-{
-	float length = sqrtf(pow(B.x - A.x, 2) + pow(B.y - A.y, 2));
-
-	return length;
-}
-
-bool pointInCircle(Vector2 circlePos, float radius, Vector2 point)
-{
-	float distanceToCentre = lineLength(circlePos, point);
-
-	if (distanceToCentre < radius)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
 
 void Game::Start()
 {
@@ -412,51 +392,6 @@ void Game::InsertNewHighScore(std::string name)
 			i = Leaderboard.size();
 		}
 	}
-}
-
-bool Game::CheckCollision(Vector2 circlePos, float circleRadius, Vector2 lineStart, Vector2 lineEnd)
-{
-	if (pointInCircle(circlePos, circleRadius, lineStart) || pointInCircle(circlePos, circleRadius, lineEnd))
-	{
-		return true;
-	}
-
-	Vector2 A = lineStart;
-	Vector2 B = lineEnd;
-	Vector2 C = circlePos;
-
-	float length = lineLength(A, B);
-
-	float dotP = (((C.x - A.x) * (B.x - A.x)) + ((C.y - A.y) * (B.y - A.y))) / pow(length, 2);
-
-	float closestX = A.x + (dotP * (B.x - A.x));
-	float closestY = A.y + (dotP * (B.y - A.y));
-
-	float buffer = 0.1;
-
-	float closeToStart = lineLength(A, { closestX, closestY });
-	float closeToEnd = lineLength(B, { closestX, closestY });
-
-	float closestLength = closeToStart + closeToEnd;
-
-	if (closestLength == length + buffer || closestLength == length - buffer)
-	{
-		float closeToCentre = lineLength(A, { closestX, closestY }); //closestX + Y compared to circle centre
-
-		if (closeToCentre < circleRadius)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	else
-	{
-		return false;
-	}
-
 }
 
 void Player::Initialize()

@@ -5,12 +5,12 @@
 class Star
 {
 private:
-    Vector2 initPosition;
     Vector2 position;
+    inline static float offset;
     float size;
 public:
-    Star(Vector2 pos, float sz) noexcept : initPosition(pos), position(pos), size(sz) {};
-    void Update(float offset) noexcept;
+    Star(Vector2 pos, float sz) noexcept : position(pos), size(sz) {};
+    void Update(float _offset) noexcept { offset = _offset; }
     void Render() noexcept;
 };
 

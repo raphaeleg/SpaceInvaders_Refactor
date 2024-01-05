@@ -1,10 +1,15 @@
 #include "Alien.h"
 #include <corecrt_math.h>
 
+Alien::Alien(float x, float y) noexcept {
+    position.x = x;
+    position.y = y;
+}
+
 void Alien::Update() noexcept
 {
     position.x += speed;
-    if (position.x <= 0 || position.x >= GetScreenWidth())
+    if (position.x <= 0 || position.x >= static_cast<float>(GetScreenWidth()))
     {
         speed = speed < 0 ? abs(speed) : -speed;
         position.y += 50;

@@ -9,7 +9,7 @@ class Player
 private:
     static constexpr float speed = 7;
     int lives = 3;
-    float x_pos = GetScreenWidth() / 2.0f;
+    float x_pos = static_cast<float>(GetScreenWidth()) / 2.0f;
     float timer = 0;
 
     static constexpr float animation_speed = 0.4f;

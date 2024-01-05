@@ -11,18 +11,13 @@ private:
     static constexpr Vector2 DT_o = { 50, 50 };
 
     Vector2 position = { 0, 0 };
-    int x = 0;
-    int y = 0;
     bool active = true;
 
 public:
 
     EntityType type = EntityType::ENEMY;
 
-    Alien(int x, int y) noexcept : x(x), y(y) {
-        position.x = x;
-        position.y = y;
-    }
+    Alien(float x, float y) noexcept;
     void Update() noexcept;
     void Render(Texture2D texture) noexcept;
     void Kill() noexcept { active = false; }

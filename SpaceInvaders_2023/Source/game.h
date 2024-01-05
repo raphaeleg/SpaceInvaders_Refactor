@@ -1,15 +1,14 @@
 #pragma once
 #include "raylib.h"
-#include <vector>
 #include "Resources.h"
-#include <string>
 #include "Player.h"
 #include "Wall.h"
 #include "Alien.h"
 #include "Projectile.h"
 #include "Background.h"
 #include "Leaderboard.h"
-
+#include <vector>
+#include <string>
 
 enum struct State
 {
@@ -23,8 +22,8 @@ struct Game
 	State gameState = {};
 	int score;
 	int wallCount = 5;
-	float wallsY = GetScreenHeight() - 250.0f;
-	float wall_distance = GetScreenWidth() / (wallCount + 1.0f);
+	float wallsY = static_cast<float>(GetScreenHeight()) - 250.0f;
+	float wall_distance = static_cast<float>(GetScreenWidth()) / (wallCount + 1.0f);
 	float shootTimer = 0;
 	Rectangle rec = { 0, 0 ,0 ,0 };
 

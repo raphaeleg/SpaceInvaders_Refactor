@@ -23,6 +23,8 @@ struct Game
 	State gameState = {};
 	int score;
 	int wallCount = 5;
+	float wallsY = GetScreenHeight() - 250.0f;
+	float wall_distance = GetScreenWidth() / (wallCount + 1.0f);
 	float shootTimer = 0;
 	Rectangle rec = { 0, 0 ,0 ,0 };
 

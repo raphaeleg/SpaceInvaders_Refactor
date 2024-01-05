@@ -8,17 +8,9 @@
 
 void Game::Start()
 {
-	float window_width = (float)GetScreenWidth();
-	float window_height = (float)GetScreenHeight();
-	float wall_distance = window_width / (wallCount + 1);
-
-	for (int i = 0; i < wallCount; i++)
+	for (int i = 1; i < wallCount + 1; i++)
 	{
-		Wall newWalls;
-		newWalls.position.y = window_height - 250;
-		newWalls.position.x = wall_distance * (i + 1);
-
-		Walls.push_back(newWalls);
+		Walls.push_back(Wall(wall_distance * i, wallsY));
 	}
 
 	Player newPlayer;
@@ -105,10 +97,6 @@ void Game::Update()
 		{
 			projectile.Update();
 		}
-		for (auto& wall : Walls)
-		{
-			wall.Update();
-		}
 
 		for (auto& projectile : Projectiles)
 		{
@@ -136,68 +124,68 @@ void Game::Update()
 
 			for (auto& wall : Walls)
 			{
-				if (CheckCollision(wall.position, wall.radius, projectile.lineStart, projectile.lineEnd))
+				if (CheckCollision(wall.GetPosition(), WALL_RADIUS, projectile.lineStart, projectile.lineEnd))
 				{
 					projectile.active = false;
-					wall.health -= 1;
+					wall.DecreaseHealth();
 				}
 			}
 		}
 
-		if (IsKeyPressed(KEY_SPACE))
-		{
-			float window_height = (float)GetScreenHeight();
-			Projectile newProjectile;
-			newProjectile.position.x = player.x_pos;
-			newProjectile.position.y = window_height - 130;
-			newProjectile.type = EntityType::PLAYER_PROJECTILE;
-			Projectiles.push_back(newProjectile);
-		}
-
-		shootTimer += 1;
-		if (shootTimer > 59)
-		{
-			int randomAlienIndex = 0;
-
-			if (Aliens.size() > 1)
+			if (IsKeyPressed(KEY_SPACE))
 			{
-				randomAlienIndex = rand() % Aliens.size();
+				float window_height = (float)GetScreenHeight();
+				Projectile newProjectile;
+				newProjectile.position.x = player.x_pos;
+				newProjectile.position.y = window_height - 130;
+				newProjectile.type = EntityType::PLAYER_PROJECTILE;
+				Projectiles.push_back(newProjectile);
 			}
 
-			Projectile newProjectile;
-			newProjectile.position = Aliens.at(randomAlienIndex).position;
-			newProjectile.position.y += 40;
-			newProjectile.speed = -15;
-			newProjectile.type = EntityType::ENEMY_PROJECTILE;
-			Projectiles.push_back(newProjectile);
-			shootTimer = 0;
-		}
+			shootTimer += 1;
+			if (shootTimer > 59)
+			{
+				int randomAlienIndex = 0;
 
-		for (int i = 0; i < Projectiles.size(); i++)
-		{
-			if (Projectiles.at(i).active == false)
-			{
-				Projectiles.erase(Projectiles.begin() + i);
-				i--;
+				if (Aliens.size() > 1)
+				{
+					randomAlienIndex = rand() % Aliens.size();
+				}
+
+				Projectile newProjectile;
+				newProjectile.position = Aliens.at(randomAlienIndex).position;
+				newProjectile.position.y += 40;
+				newProjectile.speed = -15;
+				newProjectile.type = EntityType::ENEMY_PROJECTILE;
+				Projectiles.push_back(newProjectile);
+				shootTimer = 0;
 			}
-		}
-		for (int i = 0; i < Aliens.size(); i++)
-		{
-			if (Aliens.at(i).active == false)
+
+			for (int i = 0; i < Projectiles.size(); i++)
 			{
-				Aliens.erase(Aliens.begin() + i);
-				i--;
+				if (Projectiles.at(i).active == false)
+				{
+					Projectiles.erase(Projectiles.begin() + i);
+					i--;
+				}
 			}
-		}
-		for (int i = 0; i < Walls.size(); i++)
-		{
-			if (Walls.at(i).active == false)
+			for (int i = 0; i < Aliens.size(); i++)
 			{
-				Walls.erase(Walls.begin() + i);
-				i--;
+				if (Aliens.at(i).active == false)
+				{
+					Aliens.erase(Aliens.begin() + i);
+					i--;
+				}
 			}
-		}
-		break;
+			for (int i = 0; i < Walls.size(); i++)
+			{
+				if (Walls.at(i).IsNotActive())
+				{
+					Walls.erase(Walls.begin() + i);
+					i--;
+				}
+			}
+			break;
 
 	case State::ENDSCREEN:
 		if (IsKeyReleased(KEY_ENTER) && !newHighScore)
@@ -258,9 +246,8 @@ void Game::Update()
 		break;
 	default:
 		break;
+		}
 	}
-}
-
 
 void Game::Render()
 {

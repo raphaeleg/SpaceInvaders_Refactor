@@ -3,8 +3,8 @@
 
 int main(void)
 {
-    const int screenWidth = 1920;
-    const int screenHeight = 1080;
+    constexpr float screenWidth = 1920.0f;
+    constexpr float screenHeight = 1080.0f;
 
     InitWindow(screenWidth, screenHeight, "SPACE INVADERS");
 

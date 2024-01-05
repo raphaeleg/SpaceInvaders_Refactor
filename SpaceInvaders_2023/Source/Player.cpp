@@ -1,50 +1,37 @@
 #include "Player.h"
+#include <algorithm>
 
-void Player::Initialize()
+void Player::UpdateMovement()
 {
-	float window_width = (float)GetScreenWidth();
-	x_pos = window_width / 2;
+    int movement = 0;
+    if (IsKeyDown(KEY_LEFT)) {
+        movement = -1;
+    }
+    else if (IsKeyDown(KEY_RIGHT)) {
+        movement = 1;
+    }
+    x_pos = std::clamp(x_pos += speed * movement, PLAYER_RADIUS, GetScreenWidth() - PLAYER_RADIUS);
+}
+
+void Player::UpdateAnimation() noexcept
+{
+    timer += GetFrameTime();
+    if (timer > animation_speed)
+    {
+        activeTexture == 2 ? activeTexture = 0 : activeTexture++;
+        timer = 0;
+    }
 }
 
 void Player::Update()
 {
-	direction = 0;
-	if (IsKeyDown(KEY_LEFT))
-	{
-		direction--;
-	}
-	if (IsKeyDown(KEY_RIGHT))
-	{
-		direction++;
-	}
-
-	x_pos += speed * direction;
-
-	if (x_pos < 0 + radius)
-	{
-		x_pos = 0 + radius;
-	}
-	else if (x_pos > GetScreenWidth() - radius)
-	{
-		x_pos = GetScreenWidth() - radius;
-	}
-
-	timer += GetFrameTime();
-
-	if (timer > 0.4 && activeTexture == 2)
-	{
-		activeTexture = 0;
-		timer = 0;
-	}
-	else if (timer > 0.4)
-	{
-		activeTexture++;
-		timer = 0;
-	}
+    UpdateMovement();
+    UpdateAnimation();
 }
 
-void Player::Render(Texture2D texture)
+void Player::Render(Texture2D texture) noexcept
 {
-	float window_height = GetScreenHeight();
-	DrawTexturePro(texture, { 0,0,352,352 }, { x_pos, window_height - player_base_height,100,100 }, { 50,50 }, 0, WHITE);
+    const Rectangle DT_src = { 0,0,static_cast<float>(texture.width), static_cast<float>(texture.height) };
+    const Rectangle DT_dst = { x_pos, GetScreenHeight() - PLAYER_BASE_HEIGHT, 100, 100 };
+    DrawTexturePro(texture, DT_src, DT_dst, DT_o, 0, WHITE);
 }

@@ -13,9 +13,7 @@ void Game::Start()
 		Walls.push_back(Wall(wall_distance * i, wallsY));
 	}
 
-	Player newPlayer;
-	player = newPlayer;
-	player.Initialize();
+	player = Player();
 
 	SpawnAliens();
 
@@ -67,13 +65,13 @@ void Game::Update()
 		{
 			alien.Update();
 
-			if (alien.position.y > GetScreenHeight() - player.player_base_height)
+			if (alien.position.y > GetScreenHeight() - PLAYER_BASE_HEIGHT)
 			{
 				End();
 			}
 		}
 
-		if (player.lives < 1)
+		if (player.IsDead())
 		{
 			End();
 		}
@@ -83,8 +81,8 @@ void Game::Update()
 			SpawnAliens();
 		}
 
-		playerPos = { player.x_pos, (float)player.player_base_height };
-		cornerPos = { 0, (float)player.player_base_height };
+		playerPos = { player.GetPosition(), PLAYER_BASE_HEIGHT };
+		cornerPos = { 0, PLAYER_BASE_HEIGHT };
 		offset = lineLength(playerPos, cornerPos) * -1;
 		background.Update(offset / 15);
 
@@ -110,10 +108,10 @@ void Game::Update()
 
 			if (projectile.type == EntityType::ENEMY_PROJECTILE)
 			{
-				if (CheckCollision({ player.x_pos, GetScreenHeight() - player.player_base_height }, player.radius, projectile.lineStart, projectile.lineEnd))
+				if (CheckCollision({ player.GetPosition(), GetScreenHeight() - PLAYER_BASE_HEIGHT }, PLAYER_RADIUS, projectile.lineStart, projectile.lineEnd))
 				{
 					projectile.active = false;
-					player.lives -= 1;
+					player.DecreaseHealth();
 				}
 			}
 
@@ -127,60 +125,60 @@ void Game::Update()
 			}
 		}
 
-			if (IsKeyPressed(KEY_SPACE))
+		if (IsKeyPressed(KEY_SPACE))
+		{
+			float window_height = (float)GetScreenHeight();
+			Projectile newProjectile;
+			newProjectile.position.x = player.GetPosition();
+			newProjectile.position.y = window_height - 130;
+			newProjectile.type = EntityType::PLAYER_PROJECTILE;
+			Projectiles.push_back(newProjectile);
+		}
+
+		shootTimer += 1;
+		if (shootTimer > 59)
+		{
+			int randomAlienIndex = 0;
+
+			if (Aliens.size() > 1)
 			{
-				float window_height = (float)GetScreenHeight();
-				Projectile newProjectile;
-				newProjectile.position.x = player.x_pos;
-				newProjectile.position.y = window_height - 130;
-				newProjectile.type = EntityType::PLAYER_PROJECTILE;
-				Projectiles.push_back(newProjectile);
+				randomAlienIndex = rand() % Aliens.size();
 			}
 
-			shootTimer += 1;
-			if (shootTimer > 59)
-			{
-				int randomAlienIndex = 0;
+			Projectile newProjectile;
+			newProjectile.position = Aliens.at(randomAlienIndex).position;
+			newProjectile.position.y += 40;
+			newProjectile.speed = -15;
+			newProjectile.type = EntityType::ENEMY_PROJECTILE;
+			Projectiles.push_back(newProjectile);
+			shootTimer = 0;
+		}
 
-				if (Aliens.size() > 1)
-				{
-					randomAlienIndex = rand() % Aliens.size();
-				}
-
-				Projectile newProjectile;
-				newProjectile.position = Aliens.at(randomAlienIndex).position;
-				newProjectile.position.y += 40;
-				newProjectile.speed = -15;
-				newProjectile.type = EntityType::ENEMY_PROJECTILE;
-				Projectiles.push_back(newProjectile);
-				shootTimer = 0;
-			}
-
-			for (int i = 0; i < Projectiles.size(); i++)
+		for (int i = 0; i < Projectiles.size(); i++)
+		{
+			if (Projectiles.at(i).active == false)
 			{
-				if (Projectiles.at(i).active == false)
-				{
-					Projectiles.erase(Projectiles.begin() + i);
-					i--;
-				}
+				Projectiles.erase(Projectiles.begin() + i);
+				i--;
 			}
-			for (int i = 0; i < Aliens.size(); i++)
+		}
+		for (int i = 0; i < Aliens.size(); i++)
+		{
+			if (Aliens.at(i).active == false)
 			{
-				if (Aliens.at(i).active == false)
-				{
-					Aliens.erase(Aliens.begin() + i);
-					i--;
-				}
+				Aliens.erase(Aliens.begin() + i);
+				i--;
 			}
-			for (int i = 0; i < Walls.size(); i++)
+		}
+		for (int i = 0; i < Walls.size(); i++)
+		{
+			if (Walls.at(i).IsNotActive())
 			{
-				if (Walls.at(i).IsNotActive())
-				{
-					Walls.erase(Walls.begin() + i);
-					i--;
-				}
+				Walls.erase(Walls.begin() + i);
+				i--;
 			}
-			break;
+		}
+		break;
 
 	case State::ENDSCREEN:
 		if (IsKeyReleased(KEY_ENTER) && !newHighScore)
@@ -255,9 +253,9 @@ void Game::Render()
 	case State::GAMEPLAY:
 		background.Render();
 		DrawText(TextFormat("Score: %i", score), 50, 20, 40, YELLOW);
-		DrawText(TextFormat("Lives: %i", player.lives), 50, 70, 40, YELLOW);
+		DrawText(TextFormat("Lives: %i", player.GetLives()), 50, 70, 40, YELLOW);
 
-		player.Render(shipTextures.at(player.activeTexture)._tex);
+		player.Render(shipTextures.at(player.GetActiveTexture())._tex);
 
 		for (auto& projectile : Projectiles)
 		{

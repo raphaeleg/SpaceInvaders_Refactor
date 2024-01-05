@@ -17,7 +17,7 @@ private:
 
 public:
     Wall(float posX, float posY) noexcept : position{ posX, posY } {};
-    void Render(Texture2D texture);
+    void Render(Texture2D texture) noexcept;
     void DecreaseHealth() noexcept { health -= 1; };
     Vector2 GetPosition() const noexcept { return position; };
     bool IsNotActive() const noexcept { return health < 1; };

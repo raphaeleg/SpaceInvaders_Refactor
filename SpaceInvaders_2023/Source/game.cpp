@@ -44,11 +44,6 @@ void Game::Continue()
 	gameState = State::STARTSCREEN;
 }
 
-void Game::Launch()
-{
-	resources.Load();
-}
-
 void Game::Update()
 {
 	switch (gameState)
@@ -262,21 +257,21 @@ void Game::Render()
 		DrawText(TextFormat("Score: %i", score), 50, 20, 40, YELLOW);
 		DrawText(TextFormat("Lives: %i", player.lives), 50, 70, 40, YELLOW);
 
-		player.Render(resources.shipTextures[player.activeTexture]);
+		player.Render(shipTextures.at(player.activeTexture)._tex);
 
 		for (auto& projectile : Projectiles)
 		{
-			projectile.Render(resources.laserTexture);
+			projectile.Render(laserTexture._tex);
 		}
 
 		for (auto& wall : Walls)
 		{
-			wall.Render(resources.barrierTexture);
+			wall.Render(barrierTexture._tex);
 		}
 
 		for (auto& alien : Aliens)
 		{
-			alien.Render(resources.alienTexture);
+			alien.Render(alienTexture._tex);
 		}
 		break;
 	case State::ENDSCREEN:

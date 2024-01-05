@@ -40,14 +40,21 @@ struct Game
 	void End();
 
 	void Continue();
-	void Launch();
 
 	void Update();
 	void Render();
 
 	void SpawnAliens();
 
-	Resources resources;
+	std::vector<OwnTexture> shipTextures{
+		OwnTexture("Assets/Ship1.png"),
+		OwnTexture("Assets/Ship2.png"),
+		OwnTexture("Assets/Ship3.png"),
+	};
+	OwnTexture alienTexture{ "Assets/Alien.png" };
+	OwnTexture barrierTexture{ "Assets/Barrier.png" };
+	OwnTexture laserTexture{ "Assets/Laser.png" };
+
 	Player player;
 	std::vector<Projectile> Projectiles;
 	std::vector<Wall> Walls;

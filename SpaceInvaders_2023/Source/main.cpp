@@ -11,9 +11,6 @@ int main(void)
     SetTargetFPS(60);
 
     Game game = { State::STARTSCREEN };
-    Resources resources;
-    game.resources = resources;
-    game.Launch();
 
     while (!WindowShouldClose())
     {

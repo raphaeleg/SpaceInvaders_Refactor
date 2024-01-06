@@ -108,7 +108,7 @@ void Game::SpawnAliens() {
 	for (int row = 0; row < aliensFormationHeight; row++) {
 		for (int col = 0; col < aliensFormationWidth; col++) {
 			Aliens.push_back(
-				Alien(aliensFormationX + 450 + (col * alienSpacing), aliensFormationY + (row * alienSpacing))
+				Alien(aliensFormationX + 450.0f + (col * alienSpacing), aliensFormationY + (row * alienSpacing))
 			);
 		}
 	}
@@ -117,7 +117,7 @@ void Game::SpawnAliens() {
 bool Game::IsEndConditionTriggered() {
 	bool hasAlienReached = false;
 	if (Aliens.size() >= 1) {
-		hasAlienReached = Aliens.at(0).HasReachedYPosition(static_cast<float>(GetScreenHeight()) - PLAYER_BASE_HEIGHT);
+		hasAlienReached = Aliens.at(0).HasReachedYPosition(SCREEN_HEIGHT_INT - static_cast<int>(PLAYER_BASE_HEIGHT));
 	}
 	return IsKeyReleased(KEY_Q) || player.IsDead() || hasAlienReached;
 }
@@ -142,7 +142,7 @@ void Game::CheckProjectileHit() noexcept {
 		}
 
 		else {
-			if (CheckCollision({ player.GetPosition(), static_cast<float>(GetScreenHeight()) - PLAYER_BASE_HEIGHT }, PLAYER_RADIUS, projectile.lineStart, projectile.lineEnd)) {
+			if (CheckCollision({ player.GetPosition(), SCREEN_HEIGHT - PLAYER_BASE_HEIGHT }, PLAYER_RADIUS, projectile.lineStart, projectile.lineEnd)) {
 				projectile.Hit();
 				player.DecreaseHealth();
 			}
@@ -158,7 +158,7 @@ void Game::CheckProjectileHit() noexcept {
 }
 
 void Game::PlayerShoot() {
-	const Vector2 projectilePos = { player.GetPosition(), static_cast<float>(GetScreenHeight()) - 130 };
+	const Vector2 projectilePos = { player.GetPosition(), SCREEN_HEIGHT - 130 };
 	Projectiles.push_back(Projectile(projectilePos, true));
 }
 

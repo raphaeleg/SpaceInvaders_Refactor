@@ -44,34 +44,34 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\game.h">
+    <ClInclude Include="Source\game.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Resources.h">
+    <ClInclude Include="Source\Resources.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Helper.h">
+    <ClInclude Include="Source\Helper.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Background.h">
+    <ClInclude Include="Source\Background.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\EntityType.h">
+    <ClInclude Include="Source\EntityType.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Leaderboard.h">
+    <ClInclude Include="Source\Leaderboard.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Player.h">
+    <ClInclude Include="Source\Player.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Projectile.h">
+    <ClInclude Include="Source\Projectile.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Wall.h">
+    <ClInclude Include="Source\Wall.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Alien.h">
+    <ClInclude Include="Source\Alien.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -178,16 +178,16 @@
     <ClCompile Include="Source\Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Alien.h" />
-    <ClInclude Include="Source\Background.h" />
-    <ClInclude Include="Source\EntityType.h" />
-    <ClInclude Include="Source\game.h" />
-    <ClInclude Include="Source\Helper.h" />
-    <ClInclude Include="Source\Leaderboard.h" />
-    <ClInclude Include="Source\Player.h" />
-    <ClInclude Include="Source\Projectile.h" />
-    <ClInclude Include="Source\Resources.h" />
-    <ClInclude Include="Source\Wall.h" />
+    <ClInclude Include="Source\Alien.hpp" />
+    <ClInclude Include="Source\Background.hpp" />
+    <ClInclude Include="Source\EntityType.hpp" />
+    <ClInclude Include="Source\game.hpp" />
+    <ClInclude Include="Source\Helper.hpp" />
+    <ClInclude Include="Source\Leaderboard.hpp" />
+    <ClInclude Include="Source\Player.hpp" />
+    <ClInclude Include="Source\Projectile.hpp" />
+    <ClInclude Include="Source\Resources.hpp" />
+    <ClInclude Include="Source\Wall.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

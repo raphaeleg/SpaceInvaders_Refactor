@@ -11,8 +11,8 @@ private:
 
     Rectangle DT_dst = { position.x, position.y, 200, 200 };
     static constexpr Vector2 DT_o = { 100,100 };
-    int DT_posX = position.x - 21;
-    int DT_posY = position.y + 10;
+    int DT_posX = static_cast<int>(position.x - 21);
+    int DT_posY = static_cast<int>(position.y + 10);
     static constexpr int DT_fontSize = 40;
 
 public:

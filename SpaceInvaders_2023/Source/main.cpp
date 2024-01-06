@@ -1,14 +1,10 @@
 #include "raylib.h"
 #include "game.hpp"
-
-constexpr float SCREEN_HEIGHT = 1080.0f;
-constexpr float SCREEN_WIDTH = 1920.0f;
+#include "Helper.hpp"
 
 int main(void) {
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "SPACE INVADERS");
-
+    InitWindow(SCREEN_WIDTH_INT, SCREEN_HEIGHT_INT, "SPACE INVADERS");
     SetTargetFPS(60);
-
     Game game = Game();
 
     while (!WindowShouldClose()) {

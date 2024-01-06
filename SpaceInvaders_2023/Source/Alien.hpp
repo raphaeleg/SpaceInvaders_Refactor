@@ -21,7 +21,7 @@ public:
     void Update() noexcept;
     void Render(Texture2D texture) noexcept;
     void Kill() noexcept { active = false; }
-    bool IsDead() const noexcept { return !active; }
-    bool HasReachedYPosition(int boundary) const noexcept { return position.y > boundary; }
-    Vector2 GetPosition() const noexcept { return position; }
+    [[nodiscard]] bool IsDead() const noexcept { return !active; }
+    [[nodiscard]] bool HasReachedYPosition(int boundary) const noexcept { return position.y > boundary; }
+    [[nodiscard]] Vector2 GetPosition() const noexcept { return position; }
 };

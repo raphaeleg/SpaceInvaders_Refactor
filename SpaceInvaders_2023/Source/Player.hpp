@@ -25,9 +25,9 @@ public:
 
     void Render(Texture2D texture) noexcept;
     void Update();
-    bool IsDead() const noexcept { return lives <= 0; };
-    float GetPosition() const noexcept { return x_pos; };
-    int GetLives() const noexcept { return lives; };
-    int GetActiveTexture() const noexcept { return activeTexture; };
+    [[nodiscard]] bool IsDead() const noexcept { return lives <= 0; };
+    [[nodiscard]] float GetPosition() const noexcept { return x_pos; };
+    [[nodiscard]] int GetLives() const noexcept { return lives; };
+    [[nodiscard]] int GetActiveTexture() const noexcept { return activeTexture; };
     void DecreaseHealth() noexcept { lives--; };
 };

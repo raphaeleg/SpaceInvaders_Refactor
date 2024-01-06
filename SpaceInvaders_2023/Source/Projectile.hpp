@@ -17,6 +17,6 @@ public:
     void Update() noexcept;
     void Render(Texture2D texture) noexcept;
     void Hit() noexcept { active = false; }
-    bool IsPlayerProjectile() const noexcept { return speed < 0; }
-    bool IsDead() const noexcept { return !active; }
+    [[nodiscard]] bool IsPlayerProjectile() const noexcept { return speed < 0; }
+    [[nodiscard]] bool IsDead() const noexcept { return !active; }
 };

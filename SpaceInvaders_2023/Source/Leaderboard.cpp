@@ -1,4 +1,4 @@
-#include "Leaderboard.h"
+#include "Leaderboard.hpp"
 
 void Leaderboard::InsertNewHighScore(std::string name, int score)
 {

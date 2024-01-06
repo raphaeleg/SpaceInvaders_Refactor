@@ -1,5 +1,5 @@
 #include "raylib.h"
-#include "game.h"
+#include "game.hpp"
 
 constexpr float SCREEN_HEIGHT = 1080.0f;
 constexpr float SCREEN_WIDTH = 1920.0f;

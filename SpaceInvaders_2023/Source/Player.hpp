@@ -1,5 +1,5 @@
 #include "raylib.h"
-#include "EntityType.h"
+#include "EntityType.hpp"
 
 static constexpr float PLAYER_BASE_HEIGHT = 70.0f;
 static constexpr float PLAYER_RADIUS = 50;

@@ -1,4 +1,4 @@
-#include "Alien.h"
+#include "Alien.hpp"
 #include <corecrt_math.h>
 
 Alien::Alien(float x, float y) noexcept {

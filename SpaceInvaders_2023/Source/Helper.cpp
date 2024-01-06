@@ -1,4 +1,4 @@
-#include "Helper.h"
+#include "Helper.hpp"
 #include <raylib.h>
 #include <corecrt_math.h>
 

@@ -1,5 +1,5 @@
-#include "game.h"
-#include "Helper.h"
+#include "game.hpp"
+#include "Helper.hpp"
 #include <iostream>
 #include <vector>
 #include <chrono>

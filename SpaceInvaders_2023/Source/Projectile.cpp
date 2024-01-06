@@ -1,4 +1,4 @@
-#include "Projectile.h"
+#include "Projectile.hpp"
 
 Projectile::Projectile(Vector2 pos, bool isPlayerProjectile) noexcept {
     position = pos;

@@ -1,4 +1,4 @@
-#include "Background.h"
+#include "Background.hpp"
 
 Background::Background() noexcept {
     for (int i = 0; i < starAmount; i++) {

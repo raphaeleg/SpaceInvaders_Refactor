@@ -1,6 +1,6 @@
 #pragma once
 #include "raylib.h"
-#include "EntityType.h"
+#include "EntityType.hpp"
 
 static constexpr float ALIEN_RADIUS = 30;
 

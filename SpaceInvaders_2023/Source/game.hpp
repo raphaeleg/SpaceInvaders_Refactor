@@ -1,12 +1,12 @@
 #pragma once
 #include "raylib.h"
-#include "Resources.h"
-#include "Player.h"
-#include "Wall.h"
-#include "Alien.h"
-#include "Projectile.h"
-#include "Background.h"
-#include "Leaderboard.h"
+#include "Resources.hpp"
+#include "Player.hpp"
+#include "Wall.hpp"
+#include "Alien.hpp"
+#include "Projectile.hpp"
+#include "Background.hpp"
+#include "Leaderboard.hpp"
 #include <vector>
 #include <string>
 

@@ -1,5 +1,4 @@
 #include "raylib.h"
-#include "EntityType.hpp"
 #include "Helper.hpp"
 
 static constexpr float PLAYER_BASE_HEIGHT = 70.0f;
@@ -21,8 +20,6 @@ private:
     void UpdateAnimation() noexcept;
 
 public:
-    EntityType type = EntityType::PLAYER;
-
     void Render(Texture2D texture) noexcept;
     void Update();
     [[nodiscard]] bool IsDead() const noexcept { return lives <= 0; };

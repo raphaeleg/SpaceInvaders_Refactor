@@ -1,6 +1,5 @@
 #pragma once
 #include "raylib.h"
-#include "EntityType.hpp"
 
 struct Projectile
 {

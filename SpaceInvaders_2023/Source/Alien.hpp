@@ -1,6 +1,5 @@
 #pragma once
 #include "raylib.h"
-#include "EntityType.hpp"
 
 static constexpr float ALIEN_RADIUS = 30;
 
@@ -14,9 +13,6 @@ private:
     bool active = true;
 
 public:
-
-    EntityType type = EntityType::ENEMY;
-
     Alien(float x, float y) noexcept;
     void Update() noexcept;
     void Render(Texture2D texture) noexcept;

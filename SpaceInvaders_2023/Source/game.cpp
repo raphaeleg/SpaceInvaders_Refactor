@@ -1,6 +1,5 @@
 #include "game.hpp"
 #include "Helper.hpp"
-#include "Renderer.hpp"
 #include <vector>
 #include <algorithm>
 //#include "gsl_narrow.h"
@@ -33,7 +32,7 @@ void Game::Update() {
 			End();
 			break;
 		}
-		Renderer::UpdatePlayerAnimation();
+		renderer.UpdatePlayerAnimation();
 		player.Update();
 		for (auto& alien : Aliens) { alien.Update(); }
 		if (Aliens.size() < 1) { SpawnAliens(); }
@@ -64,18 +63,18 @@ void Game::Update() {
 void Game::Render() {
 	switch (gameState) {
 	case State::STARTSCREEN:
-		Renderer::StartScreen();
+		renderer.StartScreen();
 		break;
 	case State::GAMEPLAY:
 		RenderGameplay();
 		break;
 	case State::ENDSCREEN:
 		if (leaderboard.IsNewHighScore()) {
-			Renderer::HighscoreScreen(draftHighscoreName);
+			renderer.HighscoreScreen(draftHighscoreName);
 			break;
 		}
-		Renderer::DefaultEndScreen();
-		leaderboard.Render(Renderer::textPosX_left, Renderer::fontSize_M);
+		renderer.DefaultEndScreen();
+		leaderboard.Render(textPosX_left, fontSize_M);
 		break;
 	default:
 		break;
@@ -166,7 +165,7 @@ void Game::ClearDeadEntities() {
 
 void Game::RenderGameplay() noexcept {
 	background.Render();
-	player.Render(resources.GetShip(Renderer::playerActiveTexture));
+	player.Render(resources.GetShip(renderer.GetPlayerActiveTexture()));
 	std::ranges::for_each(Projectiles, [&](auto v) noexcept { v.Render(resources.GetProjectile()); });
 	std::ranges::for_each(Walls, [&](auto v) noexcept { v.Render(resources.GetWall()); });
 	std::ranges::for_each(Aliens, [&](auto v) noexcept { v.Render(resources.GetAlien()); });

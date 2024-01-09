@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include "Resources.hpp"
+#include "Renderer.hpp"
 #include "Player.hpp"
 #include "Wall.hpp"
 #include "Alien.hpp"
@@ -39,6 +40,7 @@ private:
 	Background background;
 	Leaderboard leaderboard = Leaderboard();
 	Resources resources = Resources();
+	Renderer renderer = Renderer();
 
 	void Start();
 	void End() noexcept;

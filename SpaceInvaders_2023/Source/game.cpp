@@ -37,9 +37,9 @@ void Game::Update() {
 		player.Update();
 		for (auto& alien : Aliens) { alien.Update(); }
 		if (Aliens.size() < 1) { SpawnAliens(); }
+		background.Update(player.GetPosition());
 
-		CheckProjectileHit();
-
+		HandleProjectileHit();
 		if (IsKeyPressed(KEY_SPACE)) { PlayerShoot(); }
 		AliensShoot();
 
@@ -87,7 +87,6 @@ void Game::SpawnWalls() {
 		Walls.push_back(Wall(wall_distance * i, wallsY));
 	}
 }
-
 void Game::SpawnAliens() {
 	for (int row = 0; row < aliensFormationHeight; row++) {
 		for (int col = 0; col < aliensFormationWidth; col++) {
@@ -106,47 +105,43 @@ bool Game::IsEndConditionTriggered() noexcept {
 	return IsKeyReleased(KEY_Q) || player.IsDead() || hasAlienReachedWalls;
 }
 
-void Game::CheckProjectileHit() noexcept {
-	const Vector2 playerPos = { player.GetPosition(), PLAYER_BASE_HEIGHT };
-	const Vector2 cornerPos = { 0, PLAYER_BASE_HEIGHT };
-	const float offset = lineLength(playerPos, cornerPos) * -1;
-	background.Update(offset / 15);
-
+void Game::HandleProjectileHit() noexcept {
 	for (auto& projectile : Projectiles) {
 		projectile.Update();
-		if (IsWallHit(projectile)) {
+		const Vector2 projPos = projectile.GetPosition();
+		if (HandledWallHit(projPos)) {
 			projectile.Hit();
 			continue;
 		};
 		if (projectile.IsPlayerProjectile()) {
-			if (AreAliensHit(projectile)) { projectile.Hit(); }
+			if (HandledAlienHit(projPos)) { projectile.Hit(); }
 			continue;
 		}
-		if (IsPlayerHit(projectile)) { projectile.Hit(); }
+		if (HandledPlayerHit(projPos)) { projectile.Hit(); }
 	}
 }
-bool Game::AreAliensHit(Projectile projectile) noexcept {
-	for (auto& alien : Aliens) {
-		if (!CheckCollision(alien.GetPosition(), ALIEN_RADIUS, projectile.GetPosition())) { continue; }
-		alien.Kill();
-		leaderboard.AddScore();
-		return true;
-	}
-	return false;
+bool Game::HandledAlienHit(Vector2 projectilePosition) noexcept {
+	const auto findAlienHit = std::ranges::find_if(Aliens, [&](auto alien) noexcept {
+		return CheckCollision(alien.GetPosition(), ALIEN_RADIUS, projectilePosition);
+		});
+	if (findAlienHit == Aliens.end()) { return false; }
+	Aliens.at(std::distance(Aliens.begin(), findAlienHit)).Kill();
+	leaderboard.AddScore();
+	return true;
 }
-bool Game::IsPlayerHit(Projectile projectile) noexcept {
+bool Game::HandledPlayerHit(Vector2 projectilePosition) noexcept {
 	const Vector2 calcPlayerPos = { player.GetPosition(), SCREEN_HEIGHT - PLAYER_BASE_HEIGHT };
-	if (!CheckCollision(calcPlayerPos, PLAYER_RADIUS, projectile.GetPosition())) { return false; }
+	if (!CheckCollision(calcPlayerPos, PLAYER_RADIUS, projectilePosition)) { return false; }
 	player.DecreaseHealth();
 	return true;
 }
-bool Game::IsWallHit(Projectile projectile) noexcept {
-	for (auto& wall : Walls) {
-		if (!CheckCollision(wall.GetPosition(), WALL_RADIUS, projectile.GetPosition())) { continue; }
-		wall.DecreaseHealth();
-		return true;
-	}
-	return false;
+bool Game::HandledWallHit(Vector2 projectilePosition) noexcept {
+	const auto findWallHit = std::ranges::find_if(Walls, [&](auto wall) noexcept {
+		return CheckCollision(wall.GetPosition(), WALL_RADIUS, projectilePosition);
+		});
+	if (findWallHit == Walls.end()) { return false; }
+	Walls.at(std::distance(Walls.begin(), findWallHit)).DecreaseHealth();
+	return true;
 }
 
 void Game::PlayerShoot() {

@@ -1,4 +1,6 @@
 #include "Background.hpp"
+#include "Helper.hpp"
+#include "Player.hpp"
 
 Background::Background() noexcept {
 	for (int i = 0; i < starAmount; i++) {
@@ -8,8 +10,11 @@ Background::Background() noexcept {
 	}
 }
 
-void Background::Update(float offset) noexcept {
-	Stars.at(0).Update(offset);
+void Background::Update(float _playerPosition) noexcept {
+	const Vector2 playerPosition = { _playerPosition, PLAYER_BASE_HEIGHT };
+	const Vector2 cornerPosition = { 0, PLAYER_BASE_HEIGHT };
+	const float offset = lineLength(playerPosition, cornerPosition) * -1;
+	Stars.at(0).Update(offset / 15);
 }
 
 void Background::Render() noexcept {

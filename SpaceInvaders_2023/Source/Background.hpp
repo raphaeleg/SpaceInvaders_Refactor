@@ -20,6 +20,6 @@ private:
 
 public:
     Background() noexcept;
-    void Update(float offset) noexcept;
+    void Update(float playerPosition) noexcept;
     void Render() noexcept;
 };

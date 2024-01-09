@@ -46,10 +46,10 @@ private:
 	void SpawnAliens();
 	void SpawnWalls();
 
-	void CheckProjectileHit() noexcept;
-	[[nodiscard]] bool AreAliensHit(Projectile projectile) noexcept;
-	[[nodiscard]] bool IsPlayerHit(Projectile projectile) noexcept;
-	[[nodiscard]] bool IsWallHit(Projectile projectile) noexcept;
+	void HandleProjectileHit() noexcept;
+	[[nodiscard]] bool HandledAlienHit(Vector2 projectilePositione) noexcept;
+	[[nodiscard]] bool HandledPlayerHit(Vector2 projectilePosition) noexcept;
+	[[nodiscard]] bool HandledWallHit(Vector2 projectilePosition) noexcept;
 	void PlayerShoot();
 	void AliensShoot();
 	void ClearDeadEntities();

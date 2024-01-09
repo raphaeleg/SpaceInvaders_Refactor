@@ -9,8 +9,7 @@ void Game::Start() {
 	player = Player();
 	SpawnAliens();
 	background = Background();
-	score = 0;
-	leaderboard = Leaderboard();
+	leaderboard.ResetScore();
 	gameState = State::GAMEPLAY;
 }
 
@@ -18,7 +17,6 @@ void Game::End() noexcept {
 	Projectiles.clear();
 	Walls.clear();
 	Aliens.clear();
-	newHighScore = leaderboard.CheckNewHighScore(score);
 	gameState = State::ENDSCREEN;
 }
 
@@ -59,15 +57,14 @@ void Game::Update() {
 		break;
 
 	case State::ENDSCREEN:
-		if (!newHighScore) {
+		if (!leaderboard.IsNewHighScore()) {
 			if (IsKeyReleased(KEY_ENTER)) { ShowStartScreen(); }
 			break;
 		}
-
-		if (letterCount > 0 && letterCount < 9 && IsKeyReleased(KEY_ENTER)) {
-			std::string nameEntry(name);
-			leaderboard.InsertNewHighScore(nameEntry, score);
-			newHighScore = false;
+		updateHighscoreName();
+		if (IsKeyReleased(KEY_ENTER) && isStrWithinRange(draftHighscoreName, 0, MAX_INPUT_CHARS)) {
+			leaderboard.InsertNewHighScore(draftHighscoreName);
+			draftHighscoreName = "";
 		}
 		break;
 	default:
@@ -84,16 +81,12 @@ void Game::Render() {
 		RenderGameplay();
 		break;
 	case State::ENDSCREEN:
-		if (newHighScore) {
-			Renderer::HighscoreScreen(name);
+		if (leaderboard.IsNewHighScore()) {
+			Renderer::HighscoreScreen(draftHighscoreName);
 			break;
 		}
 		Renderer::DefaultEndScreen();
-		for (const auto& player : leaderboard.list) {
-			const int posY = 140 + (&player - &leaderboard.list.at(0)) * 40;
-			DrawText(player.name.data(), Renderer::textPosX, posY, Renderer::fontSize_M, YELLOW);
-			DrawText(TextFormat("%i", player.score), Renderer::textPosX + 300, posY, Renderer::fontSize_M, YELLOW);
-		}
+		leaderboard.Render(Renderer::textPosX_left, Renderer::fontSize_M);
 		break;
 	default:
 		break;
@@ -139,7 +132,7 @@ void Game::CheckProjectileHit() noexcept {
 				if (CheckCollision(alien.GetPosition(), ALIEN_RADIUS, projectile.lineStart, projectile.lineEnd)) {
 					projectile.Hit();
 					alien.Kill();
-					score += scoreAddifyer;
+					leaderboard.AddScore();
 				}
 			}
 		}
@@ -206,6 +199,15 @@ void Game::RenderGameplay() noexcept {
 	std::ranges::for_each(Walls, [&](auto v) noexcept { v.Render(resources.GetWall()); });
 	std::ranges::for_each(Aliens, [&](auto v) noexcept { v.Render(resources.GetAlien()); });
 
-	DrawText(TextFormat("Score: %i", score), 50, 20, 40, YELLOW);
+	DrawText(TextFormat("Score: %i", leaderboard.GetScore()), 50, 20, 40, YELLOW);
 	DrawText(TextFormat("Lives: %i", player.GetLives()), 50, 70, 40, YELLOW);
+}
+void Game::updateHighscoreName() {
+	const int key = GetCharPressed();
+	if (isValidInput(key, std::size(draftHighscoreName))) {
+		draftHighscoreName.push_back(static_cast<char>(key));
+	}
+	if (IsKeyPressed(KEY_BACKSPACE) && !draftHighscoreName.empty()) {
+		draftHighscoreName.pop_back();
+	}
 }

@@ -34,15 +34,7 @@ private:
 	static constexpr float aliensFormationX = 100.0f;
 	static constexpr float aliensFormationY = 50.0f;
 
-	const std::vector<OwnTexture> shipTextures{
-		OwnTexture("Assets/Ship1.png"),
-		OwnTexture("Assets/Ship2.png"),
-		OwnTexture("Assets/Ship3.png"),
-	};
-	const OwnTexture alienTexture{ "Assets/Alien.png" };
-	const OwnTexture barrierTexture{ "Assets/Barrier.png" };
-	const OwnTexture laserTexture{ "Assets/Laser.png" };
-
+	Resources resources = Resources();
 	Player player;
 	std::vector<Projectile> Projectiles;
 	std::vector<Wall> Walls;

@@ -1,20 +1,16 @@
 #include "Helper.hpp"
 #include "Projectile.hpp"
-#include "raylib.h"
 #include <corecrt_math.h>
 
-float lineLength(Vector2 A, Vector2 B) noexcept
-{
+float lineLength(Vector2 A, Vector2 B) noexcept {
 	return sqrtf(static_cast<float>(pow(B.x - A.x, 2) + pow(B.y - A.y, 2)));
 }
 
-static bool pointInCircle(Vector2 circlePos, float radius, Vector2 point) noexcept
-{
+static bool pointInCircle(Vector2 circlePos, float radius, Vector2 point) noexcept {
 	return lineLength(circlePos, point) < radius;
 }
 
-bool CheckCollision(Vector2 circleOrigin, float circleRadius, Vector2 projectilePosition) noexcept
-{
+bool CheckCollision(Vector2 circleOrigin, float circleRadius, Vector2 projectilePosition) noexcept {
 	const Vector2 A = { projectilePosition.x, projectilePosition.y - PROJECTILE_LENGTH };
 	const Vector2 B = { projectilePosition.x, projectilePosition.y + PROJECTILE_LENGTH };
 

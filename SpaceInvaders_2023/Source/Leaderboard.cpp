@@ -3,8 +3,7 @@
 #include "raylib.h"
 #include <algorithm>
 
-void Leaderboard::InsertNewHighScore(std::string name)
-{
+void Leaderboard::InsertNewHighScore(std::string name) {
 	PlayerData newData{ name, score };
 	records.push_back(newData);
 	std::ranges::sort(records, std::ranges::greater{}, &PlayerData::score);

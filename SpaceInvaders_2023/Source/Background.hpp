@@ -1,9 +1,8 @@
 #pragma once
-#include <raylib.h>
+#include "raylib.h"
 #include <vector>
 
-class Star
-{
+class Star {
 private:
     Vector2 position;
     inline static float offset;
@@ -14,8 +13,7 @@ public:
     void Render() noexcept;
 };
 
-class Background
-{
+class Background{
 private:
     static constexpr int starAmount = 600;
     std::vector<Star> Stars;

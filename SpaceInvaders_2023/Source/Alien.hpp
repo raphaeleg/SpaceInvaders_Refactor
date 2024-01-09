@@ -1,10 +1,8 @@
 #pragma once
 #include "raylib.h"
-
 static constexpr float ALIEN_RADIUS = 30;
 
-class Alien
-{
+class Alien {
 private:
     int speed = 2;
     static constexpr Vector2 DT_o = { 50, 50 };

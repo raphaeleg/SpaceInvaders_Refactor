@@ -32,18 +32,13 @@ private:
 	static constexpr float aliensFormationX = 100.0f;
 	static constexpr float aliensFormationY = 50.0f;
 
-	Resources resources = Resources();
 	Player player;
 	std::vector<Projectile> Projectiles;
 	std::vector<Wall> Walls;
 	std::vector<Alien> Aliens;
 	Background background;
 	Leaderboard leaderboard = Leaderboard();
-
-	Vector2 playerPos;
-	Vector2 alienPos;
-	Vector2 cornerPos;
-	float offset;
+	Resources resources = Resources();
 
 	void Start();
 	void End() noexcept;
@@ -52,10 +47,13 @@ private:
 	void SpawnWalls();
 
 	void CheckProjectileHit() noexcept;
+	[[nodiscard]] bool AreAliensHit(Projectile projectile) noexcept;
+	[[nodiscard]] bool IsPlayerHit(Projectile projectile) noexcept;
+	[[nodiscard]] bool IsWallHit(Projectile projectile) noexcept;
 	void PlayerShoot();
 	void AliensShoot();
 	void ClearDeadEntities();
-	bool IsEndConditionTriggered();
+	[[nodiscard]] bool IsEndConditionTriggered() noexcept;
 
 	void RenderGameplay() noexcept;
 	[[nodiscard]] bool constexpr isValidInput(int key, size_t len) noexcept { return (key >= 32) && (key <= 125) && (len < MAX_INPUT_CHARS); }

@@ -16,9 +16,6 @@ private:
     int activeTexture = 0;
     static constexpr Vector2 DT_o = { 50,50 };
 
-    void UpdateMovement();
-    void UpdateAnimation() noexcept;
-
 public:
     void Render(Texture2D texture) noexcept;
     void Update();

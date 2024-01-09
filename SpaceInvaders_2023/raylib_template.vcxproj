@@ -180,12 +180,12 @@
   <ItemGroup>
     <ClInclude Include="Source\Alien.hpp" />
     <ClInclude Include="Source\Background.hpp" />
-    <ClInclude Include="Source\EntityType.hpp" />
     <ClInclude Include="Source\game.hpp" />
     <ClInclude Include="Source\Helper.hpp" />
     <ClInclude Include="Source\Leaderboard.hpp" />
     <ClInclude Include="Source\Player.hpp" />
     <ClInclude Include="Source\Projectile.hpp" />
+    <ClInclude Include="Source\Renderer.hpp" />
     <ClInclude Include="Source\Resources.hpp" />
     <ClInclude Include="Source\Wall.hpp" />
   </ItemGroup>

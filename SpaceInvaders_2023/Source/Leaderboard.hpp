@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 
+static constexpr int MAX_INPUT_CHARS = 9;
+
 struct PlayerData
 {
     std::string name;

@@ -66,13 +66,7 @@ private:
 	void ClearDeadEntities();
 	bool IsEndConditionTriggered();
 
-	void MouseOnEndScreenText() noexcept;
-	void MouseNotOnEndScreenText() noexcept;
-
-	void RenderStartScreen() noexcept;
-	void RenderGameplay();
-	void RenderEndScreenHighscore() noexcept;
-	void RenderEndScreen() noexcept;
+	void RenderGameplay() noexcept;
 
 public:
 	void Update();

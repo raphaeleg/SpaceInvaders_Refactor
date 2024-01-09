@@ -13,7 +13,5 @@ void Projectile::Update() noexcept {
 }
 
 void Projectile::Render(Texture2D texture) noexcept {
-	const Rectangle DT_src = { 0,0,static_cast<float>(texture.width), static_cast<float>(texture.height) };
-	const Rectangle DT_dst = { position.x,position.y,50,50 };
-	DrawTexturePro(texture, DT_src, DT_dst, DT_o, 0, WHITE);
+	DrawTexture(texture, position.x, position.y, WHITE);
 }

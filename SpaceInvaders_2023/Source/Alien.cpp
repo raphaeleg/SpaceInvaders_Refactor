@@ -2,10 +2,6 @@
 #include "Helper.hpp"
 #include <corecrt_math.h>
 
-Alien::Alien(float x, float y) noexcept {
-	position.x = x;
-	position.y = y;
-}
 
 void Alien::Update() noexcept {
 	position.x += speed;

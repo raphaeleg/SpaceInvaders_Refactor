@@ -28,7 +28,7 @@ void Renderer::HighscoreScreen(std::string name) noexcept {
 	DrawText(name.c_str(), textBoxX + 5, textBoxY + 8, fontSize_M, MAROON);
 	DrawText(TextFormat("INPUT CHARS: %i/%i", name.length(), MAX_INPUT_CHARS - 1), textPosX, 600, fontSize_S, YELLOW);
 
-	if (isStrWithinRange(name, 0, MAX_INPUT_CHARS)) {
+	if (name.size() < MAX_INPUT_CHARS) {
 		DrawText("PRESS ENTER TO CONTINUE", textPosX, 800, fontSize_M, YELLOW);
 	}
 	if (!mouseOnText()) { return; }

@@ -9,7 +9,8 @@ void Player::Update() {
 	else if (IsKeyDown(KEY_RIGHT)) {
 		movement = 1;
 	}
-	x_pos = std::clamp(x_pos += speed * movement, PLAYER_RADIUS, SCREEN_WIDTH - PLAYER_RADIUS);
+	x_pos += speed * movement;
+	x_pos = std::clamp(x_pos, PLAYER_RADIUS, SCREEN_WIDTH - PLAYER_RADIUS);
 }
 
 void Player::Render(Texture2D texture) noexcept {

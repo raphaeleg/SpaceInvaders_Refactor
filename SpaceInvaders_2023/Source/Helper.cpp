@@ -1,9 +1,9 @@
 #include "Helper.hpp"
 #include "Projectile.hpp"
-#include <corecrt_math.h>
+#include <cmath>
 
 float lineLength(Vector2 A, Vector2 B) noexcept {
-	return sqrtf(static_cast<float>(pow(B.x - A.x, 2) + pow(B.y - A.y, 2)));
+	return std::sqrtf(static_cast<float>(std::pow(B.x - A.x, 2) + std::pow(B.y - A.y, 2)));
 }
 
 static bool pointInCircle(Vector2 circlePos, float radius, Vector2 point) noexcept {
@@ -20,7 +20,7 @@ bool CheckCollision(Vector2 circleOrigin, float circleRadius, Vector2 projectile
 
 	constexpr float buffer = 0.1f;
 	const float length = lineLength(A, B);
-	const float dotP = static_cast<float>((((circleOrigin.x - A.x) * (B.x - A.x)) + ((circleOrigin.y - A.y) * (B.y - A.y))) / pow(length, 2));
+	const float dotP = static_cast<float>((((circleOrigin.x - A.x) * (B.x - A.x)) + ((circleOrigin.y - A.y) * (B.y - A.y))) /std::pow(length, 2));
 
 	const float closestX = A.x + (dotP * (B.x - A.x));
 	const float closestY = A.y + (dotP * (B.y - A.y));

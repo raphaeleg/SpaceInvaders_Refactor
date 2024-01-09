@@ -11,7 +11,7 @@ private:
     bool active = true;
 
 public:
-    Alien(float x, float y) noexcept;
+    Alien(const Vector2& pos) noexcept : position(pos) {};
     void Update() noexcept;
     void Render(Texture2D texture) noexcept;
     void Kill() noexcept { active = false; }

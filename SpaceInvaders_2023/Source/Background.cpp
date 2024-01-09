@@ -17,12 +17,12 @@ void Background::Update(float _playerPosition) noexcept {
 	Stars.at(0).Update(offset / 15);
 }
 
-void Background::Render() noexcept {
-	for (auto& star : Stars) {
+void Background::Render() const noexcept {
+	for (const auto& star : Stars) {
 		star.Render();
 	}
 }
 
-void Star::Render() noexcept {
+void Star::Render() const noexcept {
 	DrawCircle(static_cast<int>(position.x + offset), static_cast<int>(position.y), size, SKYBLUE);
 }

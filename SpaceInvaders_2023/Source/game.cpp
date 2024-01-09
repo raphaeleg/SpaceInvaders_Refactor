@@ -82,16 +82,15 @@ void Game::Render() {
 }
 
 void Game::SpawnWalls() {
-	for (int i = 1; i < wallCount + 1; i++) {
-		Walls.push_back(Wall(wall_distance * i, wallsY));
+	for (int i = 0; i < wallCount; i++) {
+		Walls.emplace_back(wall_distance * i+1, wallsY);
 	}
 }
 void Game::SpawnAliens() {
 	for (int row = 0; row < aliensFormationHeight; row++) {
 		for (int col = 0; col < aliensFormationWidth; col++) {
-			Aliens.push_back(
-				Alien(aliensFormationX + 450.0f + (col * alienSpacing), aliensFormationY + (row * alienSpacing))
-			);
+			const auto pos = Vector2(aliensFormationX + 450.0f + (col * alienSpacing), aliensFormationY + (row * alienSpacing));			
+			Aliens.emplace_back(pos);
 		}
 	}
 }
@@ -99,7 +98,7 @@ void Game::SpawnAliens() {
 bool Game::IsEndConditionTriggered() noexcept {
 	bool hasAlienReachedWalls = false;
 	if (Aliens.size() >= 1) {
-		hasAlienReachedWalls = Aliens.at(Aliens.size() - 1).HasReachedYPosition(SCREEN_HEIGHT_INT - static_cast<int>(PLAYER_BASE_HEIGHT));
+		hasAlienReachedWalls = Aliens[Aliens.size() - 1].HasReachedYPosition(SCREEN_HEIGHT_INT - static_cast<int>(PLAYER_BASE_HEIGHT));
 	}
 	return IsKeyReleased(KEY_Q) || player.IsDead() || hasAlienReachedWalls;
 }
@@ -124,22 +123,22 @@ bool Game::HandledAlienHit(Vector2 projectilePosition) noexcept {
 		return CheckCollision(alien.GetPosition(), ALIEN_RADIUS, projectilePosition);
 		});
 	if (findAlienHit == Aliens.end()) { return false; }
-	Aliens.at(std::distance(Aliens.begin(), findAlienHit)).Kill();
+	findAlienHit->Kill();
 	leaderboard.AddScore();
 	return true;
 }
-bool Game::HandledPlayerHit(Vector2 projectilePosition) noexcept {
+bool Game::HandledPlayerHit(Vector2 projectilePosition) noexcept {	
 	const Vector2 calcPlayerPos = { player.GetPosition(), SCREEN_HEIGHT - PLAYER_BASE_HEIGHT };
 	if (!CheckCollision(calcPlayerPos, PLAYER_RADIUS, projectilePosition)) { return false; }
 	player.DecreaseHealth();
 	return true;
 }
 bool Game::HandledWallHit(Vector2 projectilePosition) noexcept {
-	const auto findWallHit = std::ranges::find_if(Walls, [&](auto wall) noexcept {
+	const auto wall = std::ranges::find_if(Walls, [&](auto wall) noexcept {
 		return CheckCollision(wall.GetPosition(), WALL_RADIUS, projectilePosition);
 		});
-	if (findWallHit == Walls.end()) { return false; }
-	Walls.at(std::distance(Walls.begin(), findWallHit)).DecreaseHealth();
+	if (wall == Walls.end()) { return false; }
+	wall->DecreaseHealth();
 	return true;
 }
 
@@ -153,7 +152,7 @@ void Game::AliensShoot() {
 	shootTimer = 0;
 
 	const int randomAlienIndex = Aliens.size() > 1 ? rand() % Aliens.size() : 0;
-	Vector2 projectilePos = Aliens.at(randomAlienIndex).GetPosition();
+	Vector2 projectilePos = Aliens[randomAlienIndex].GetPosition();
 	projectilePos.y += 40;
 	Projectiles.push_back(Projectile(projectilePos, false));
 }
@@ -174,9 +173,10 @@ void Game::RenderGameplay() noexcept {
 	DrawText(TextFormat("Lives: %i", player.GetLives()), 50, 70, 40, YELLOW);
 }
 void Game::updateHighscoreName() {
-	const int key = GetCharPressed();
+	const auto key = GetCharPressed();
+	const auto keyStr = static_cast<char>(key);
 	if (isValidInput(key, std::size(draftHighscoreName))) {
-		draftHighscoreName.push_back(static_cast<char>(key));
+		draftHighscoreName.push_back(keyStr);
 	}
 	if (IsKeyPressed(KEY_BACKSPACE) && !draftHighscoreName.empty()) {
 		draftHighscoreName.pop_back();

@@ -4,13 +4,14 @@
 
 class Star {
 private:
-    Vector2 position;
-    inline static float offset;
+    Vector2 position;    
     float size;
+    inline static float offset;
+
 public:
     Star(Vector2 pos, float sz) noexcept : position(pos), size(sz) {};
     void Update(float _offset) noexcept { offset = _offset; }
-    void Render() noexcept;
+    void Render() const noexcept;
 };
 
 class Background{
@@ -21,5 +22,5 @@ private:
 public:
     Background() noexcept;
     void Update(float playerPosition) noexcept;
-    void Render() noexcept;
+    void Render() const noexcept;
 };

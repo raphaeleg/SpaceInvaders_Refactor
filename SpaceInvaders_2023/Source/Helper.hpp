@@ -9,3 +9,6 @@ constexpr int SCREEN_WIDTH_INT = static_cast<int>(SCREEN_WIDTH);
 float lineLength(Vector2 A, Vector2 B) noexcept;
 bool CheckCollision(Vector2 C, float circleRadius, Vector2 projectilePosition) noexcept;
 [[nodiscard]] constexpr bool isStrWithinRange(std::string str, int min, int max) noexcept { return str.length() > min && str.length() < max; }
+
+
+float GetWindowHeightF() noexcept { return static_cast<float>(GetWindowHeight());  }

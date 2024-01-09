@@ -37,7 +37,13 @@ struct Resources {
 	[[nodiscard]] Texture2D GetAlien() const noexcept { return alienTexture.Get(); }
 	[[nodiscard]] Texture2D GetWall() const noexcept { return barrierTexture.Get(); }
 	[[nodiscard]] Texture2D GetProjectile() const noexcept { return laserTexture.Get(); }
-	[[nodiscard]] Texture2D GetShip(int i) const noexcept { return shipTextures.at(i).Get(); }
+	[[nodiscard]] Texture2D GetShip(std::size_t i) const noexcept { 
+		if (i >= shipTextures.size()) { return shipTextures.front().Get(); }
+		//TODO: supress the warnings
+		return shipTextures[i].Get();
+	}
+
+	//TODO: supress warning. This should throw
 	Resources() {
 		shipTextures.emplace_back(OwnTexture("Assets/Ship1.png"));
 		shipTextures.emplace_back(OwnTexture("Assets/Ship2.png"));

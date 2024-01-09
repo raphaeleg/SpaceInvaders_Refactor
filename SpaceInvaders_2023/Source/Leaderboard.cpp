@@ -9,6 +9,7 @@ void Leaderboard::InsertNewHighScore(std::string name)
 	records.push_back(newData);
 	std::ranges::sort(records, std::ranges::greater{}, &PlayerData::score);
 	records.erase(records.end() - 1);
+	ResetScore();
 }
 
 void Leaderboard::Render(int textPosX, int fontSize) noexcept {

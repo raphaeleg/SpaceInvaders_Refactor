@@ -1,5 +1,6 @@
 #include "Helper.hpp"
-#include <raylib.h>
+#include "Projectile.hpp"
+#include "raylib.h"
 #include <corecrt_math.h>
 
 float lineLength(Vector2 A, Vector2 B) noexcept
@@ -12,10 +13,12 @@ static bool pointInCircle(Vector2 circlePos, float radius, Vector2 point) noexce
 	return lineLength(circlePos, point) < radius;
 }
 
-bool CheckCollision(Vector2 circleOrigin, float circleRadius, Vector2 A, Vector2 B) noexcept
+bool CheckCollision(Vector2 circleOrigin, float circleRadius, Vector2 projectilePosition) noexcept
 {
-	if (pointInCircle(circleOrigin, circleRadius, A) || pointInCircle(circleOrigin, circleRadius, B))
-	{
+	const Vector2 A = { projectilePosition.x, projectilePosition.y - PROJECTILE_LENGTH };
+	const Vector2 B = { projectilePosition.x, projectilePosition.y + PROJECTILE_LENGTH };
+
+	if (pointInCircle(circleOrigin, circleRadius, A) || pointInCircle(circleOrigin, circleRadius, B)) {
 		return true;
 	}
 
@@ -31,8 +34,7 @@ bool CheckCollision(Vector2 circleOrigin, float circleRadius, Vector2 A, Vector2
 
 	const float closestLength = closeToStart + closeToEnd;
 
-	if (closestLength == length + buffer || closestLength == length - buffer)
-	{
+	if (closestLength == length + buffer || closestLength == length - buffer) {
 		return closeToStart < circleRadius;
 	}
 	return false;

@@ -129,7 +129,7 @@ void Game::CheckProjectileHit() noexcept {
 		projectile.Update();
 		if (projectile.IsPlayerProjectile()) {
 			for (auto& alien : Aliens) {
-				if (CheckCollision(alien.GetPosition(), ALIEN_RADIUS, projectile.lineStart, projectile.lineEnd)) {
+				if (CheckCollision(alien.GetPosition(), ALIEN_RADIUS, projectile.GetPosition())) {
 					projectile.Hit();
 					alien.Kill();
 					leaderboard.AddScore();
@@ -138,14 +138,14 @@ void Game::CheckProjectileHit() noexcept {
 		}
 
 		else {
-			if (CheckCollision({ player.GetPosition(), SCREEN_HEIGHT - PLAYER_BASE_HEIGHT }, PLAYER_RADIUS, projectile.lineStart, projectile.lineEnd)) {
+			if (CheckCollision({ player.GetPosition(), SCREEN_HEIGHT - PLAYER_BASE_HEIGHT }, PLAYER_RADIUS, projectile.GetPosition())) {
 				projectile.Hit();
 				player.DecreaseHealth();
 			}
 		}
 
 		for (auto& wall : Walls) {
-			if (CheckCollision(wall.GetPosition(), WALL_RADIUS, projectile.lineStart, projectile.lineEnd)) {
+			if (CheckCollision(wall.GetPosition(), WALL_RADIUS, projectile.GetPosition())) {
 				projectile.Hit();
 				wall.DecreaseHealth();
 			}

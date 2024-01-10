@@ -11,6 +11,8 @@
 #include "Helper.hpp"
 #include <vector>
 #include <string>
+#include <chrono>
+#include <time.h>    
 
 enum struct State {
 	STARTSCREEN,
@@ -61,6 +63,10 @@ private:
 	[[nodiscard]] bool constexpr isValidInput(int key, size_t len) noexcept { return (key >= 32) && (key <= 125) && (len < MAX_INPUT_CHARS); }
 	void updateHighscoreName();
 
+	unsigned int frameCounter = 0;
+	unsigned int savedframeCounter = 0;
+	unsigned __int64 frameStartTime = duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+	void UpdateBenchmark() noexcept;
 public:
 	void Update();
 	void Render();

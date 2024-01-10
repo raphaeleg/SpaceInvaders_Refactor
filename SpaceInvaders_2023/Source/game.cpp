@@ -2,7 +2,6 @@
 #include "Helper.hpp"
 #include <vector>
 #include <algorithm>
-//#include "gsl_narrow.h"
 
 void Game::Start() {
 	player = Player();
@@ -23,6 +22,7 @@ void Game::ShowStartScreen() noexcept {
 }
 
 void Game::Update() {
+	UpdateBenchmark();
 	switch (gameState) {
 	case State::STARTSCREEN:
 		if (IsKeyReleased(KEY_SPACE)) { Start(); }
@@ -79,6 +79,7 @@ void Game::Render() {
 	default:
 		break;
 	}
+	DrawText(TextFormat("Benchmark: %i", savedframeCounter), 50, 120, 40, RED);
 }
 
 void Game::SpawnWalls() {
@@ -180,5 +181,14 @@ void Game::updateHighscoreName() {
 	}
 	if (IsKeyPressed(KEY_BACKSPACE) && !draftHighscoreName.empty()) {
 		draftHighscoreName.pop_back();
+	}
+}
+void Game::UpdateBenchmark() noexcept{
+	const unsigned __int64 now = duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+	frameCounter += 1;
+	if ((now - frameStartTime) >= 1000) {
+		frameStartTime = now;
+		savedframeCounter = frameCounter;
+		frameCounter = 0;
 	}
 }

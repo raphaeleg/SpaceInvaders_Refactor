@@ -9,7 +9,7 @@ float lineLength(Vector2 A, Vector2 B) noexcept {
 static bool pointInCircle(Vector2 circlePos, float radius, Vector2 point) noexcept {
 	return lineLength(circlePos, point) < radius;
 }
-
+// TODO: Make CheckCollision smaller
 bool CheckCollision(Vector2 circleOrigin, float circleRadius, Vector2 projectilePosition) noexcept {
 	const Vector2 A = { projectilePosition.x, projectilePosition.y - PROJECTILE_LENGTH };
 	const Vector2 B = { projectilePosition.x, projectilePosition.y + PROJECTILE_LENGTH };

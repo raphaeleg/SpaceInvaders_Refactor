@@ -6,7 +6,7 @@ class Player {
 private:
 	static constexpr float speed = 7;
 	int lives = 3;
-	Vector2 position = { SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT - PLAYER_BASE_HEIGHT };
+	Vector2 position = { GetScreenWidthF() / 2.0f, GetScreenHeightF() - PLAYER_BASE_HEIGHT };
 	float timer = 0;
 
 public:

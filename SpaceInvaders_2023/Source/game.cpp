@@ -50,7 +50,7 @@ void Game::Update() {
 			break;
 		}
 		updateHighscoreName();
-		if (IsKeyReleased(KEY_ENTER) && isStrWithinRange(draftHighscoreName, 0, MAX_INPUT_CHARS)) {
+		if (IsKeyReleased(KEY_ENTER) && draftHighscoreName.size() > 0 && draftHighscoreName.size() < MAX_INPUT_CHARS) {
 			leaderboard.InsertNewHighScore(draftHighscoreName);
 			draftHighscoreName = "";
 		}
@@ -100,7 +100,7 @@ void Game::SpawnAliens() {
 bool Game::IsEndConditionTriggered() noexcept {
 	bool hasAlienReachedWalls = false;
 	if (Aliens.size() >= 1) {
-		hasAlienReachedWalls = Aliens.at(Aliens.size() - 1).HasReachedYPosition(SCREEN_HEIGHT_INT - static_cast<int>(PLAYER_BASE_HEIGHT));
+		hasAlienReachedWalls = Aliens.at(Aliens.size() - 1).HasReachedYPosition(GetScreenHeight() - static_cast<int>(PLAYER_BASE_HEIGHT));
 	}
 	return IsKeyReleased(KEY_Q) || player.IsDead() || hasAlienReachedWalls;
 }
@@ -130,7 +130,7 @@ bool Game::HandledAlienHit(Vector2 projectilePosition) noexcept {
 	return true;
 }
 bool Game::HandledPlayerHit(Vector2 projectilePosition) noexcept {
-	const Vector2 calcPlayerPos = { player.GetPosition(), SCREEN_HEIGHT - PLAYER_BASE_HEIGHT };
+	const Vector2 calcPlayerPos = { player.GetPosition(), GetScreenHeightF() - PLAYER_BASE_HEIGHT };
 	if (!CheckCollision(calcPlayerPos, PLAYER_RADIUS, projectilePosition)) { return false; }
 	player.DecreaseHealth();
 	return true;
@@ -145,7 +145,7 @@ bool Game::HandledWallHit(Vector2 projectilePosition) noexcept {
 }
 
 void Game::PlayerShoot() {
-	const Vector2 projectilePos = { player.GetPosition(), SCREEN_HEIGHT - 130 };
+	const Vector2 projectilePos = { player.GetPosition(), GetScreenHeightF() - 130 };
 	Projectiles.push_back(Projectile(projectilePos, true));
 }
 void Game::AliensShoot() {

@@ -10,7 +10,7 @@ void Player::Update() {
 		movement = 1;
 	}
 	position.x += speed * movement;
-	position.x = std::clamp(GetPosition(), PLAYER_RADIUS, SCREEN_WIDTH - PLAYER_RADIUS);
+	position.x = std::clamp(GetPosition(), PLAYER_RADIUS, GetScreenWidthF() - PLAYER_RADIUS);
 }
 
 void Player::Render(Texture2D texture) const noexcept {

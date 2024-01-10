@@ -27,8 +27,8 @@ private:
 	std::string draftHighscoreName = "";
 
 	static constexpr int wallCount = 5;
-	float wallsY = SCREEN_HEIGHT - 250.0f;
-	float wall_distance = SCREEN_WIDTH / (wallCount + 1.0f);
+	float wallsY = GetScreenHeightF() - 250.0f;
+	float wall_distance = GetScreenWidthF() / (wallCount + 1.0f);
 	static constexpr int aliensFormationWidth = 8;
 	static constexpr int aliensFormationHeight = 5;
 	static constexpr float alienSpacing = 80.0f;

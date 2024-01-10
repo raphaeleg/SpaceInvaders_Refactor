@@ -5,17 +5,15 @@ static constexpr float PLAYER_RADIUS = 50;
 class Player {
 private:
 	static constexpr float speed = 7;
-	static constexpr Vector2 DT_o = { 50,50 };
 	int lives = 3;
-	float x_pos = SCREEN_WIDTH / 2.0f;
-	float timer = 0;
+	Vector2 position = { GetScreenWidthF() / 2.0f, GetScreenHeightF() - PLAYER_BASE_HEIGHT };
 	
-
 public:
 	void Render(Texture2D texture) noexcept;
 	void Update();
 	[[nodiscard]] bool IsDead() const noexcept { return lives <= 0; };
-	[[nodiscard]] float GetPosition() const noexcept { return x_pos; };
+	[[nodiscard]] Vector2 GetPosition() const noexcept { return position; };
+	[[nodiscard]] float GetPositionX() const noexcept { return position.x; };
 	[[nodiscard]] int GetLives() const noexcept { return lives; };
 	void DecreaseHealth() noexcept { lives--; };
 };

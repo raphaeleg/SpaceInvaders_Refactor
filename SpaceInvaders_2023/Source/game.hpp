@@ -26,17 +26,16 @@ private:
 	static constexpr float aliensFormationX = 100.0f;
 	static constexpr float aliensFormationY = 50.0f;
 	static constexpr int wallCount = 5;
-
+	float walls_positionY = GetScreenHeightF() - (GetScreenHeightF() / 4.0f);
+	float wall_distance = GetScreenWidthF() / (wallCount + 1.0f);
 
 	State gameState = { State::STARTSCREEN };
-	float shootTimer = 0;
-	std::string draftHighscoreName = "";	
-	float wallsY = SCREEN_HEIGHT - 250.0f;
-	float wall_distance = SCREEN_WIDTH / (wallCount + 1.0f);
+	float shootTimer = 0;	
 	
 	Resources resources{};
 	Player player{};
-	std::vector<Projectile> Projectiles;
+	std::vector<Projectile> PlayerProjectiles;
+	std::vector<Projectile> AlienProjectiles;
 	std::vector<Wall> Walls;
 	std::vector<Alien> Aliens;
 	Background background{};
@@ -51,19 +50,17 @@ private:
 	void SpawnWalls();
 
 	void HandleProjectileHit() noexcept;
-	[[nodiscard]] bool HandledAlienHit(Vector2 projectilePositione) noexcept;
-	[[nodiscard]] bool HandledPlayerHit(Vector2 projectilePosition) noexcept;
-	[[nodiscard]] bool HandledWallHit(Vector2 projectilePosition) noexcept;
+	[[nodiscard]] bool IsAlienHit(Vector2 projectilePositione) noexcept;
+	[[nodiscard]] bool IsPlayerHit(Vector2 projectilePosition) noexcept;
+	[[nodiscard]] bool IsWallHit(Vector2 projectilePosition) noexcept;
 	void PlayerShoot();
 	void AliensShoot();
-	void ClearDeadEntities();
 	[[nodiscard]] bool IsEndConditionTriggered() noexcept;
 
 	void RenderGameplay() noexcept;
-	[[nodiscard]] bool constexpr isValidInput(int key, size_t len) noexcept { return (key > 31) && (key < 126) && (len < MAX_INPUT_CHARS); }
-	void updateHighscoreName();
+
 
 public:
 	void Update();
-	void Render();
+	void Render() noexcept;
 };

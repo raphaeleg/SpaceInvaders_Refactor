@@ -7,13 +7,13 @@ void Renderer::StartScreen() noexcept {
 void Renderer::HighlightTextbox() noexcept {
 	if (mouseOnText()) {
 		SetMouseCursor(MOUSE_CURSOR_IBEAM);
-		framesCounter++;
-		DrawRectangleLines(textBoxX, textBoxY, textBoxWidth, textBoxHeight, RED);
+		framesCounter++; // TODO: find way to make this func const. it bubbles up.
+		DrawRectangleLines(textBoxX(), textBoxY(), textBoxWidth(), textBoxHeight(), RED);
 		return;
 	}
 	SetMouseCursor(MOUSE_CURSOR_DEFAULT);
 	framesCounter = 0;
-	DrawRectangleLines(textBoxX, textBoxY, textBoxWidth, textBoxHeight, DARKGRAY);
+	DrawRectangleLines(textBoxX(), textBoxY(), textBoxWidth(), textBoxHeight(), DARKGRAY);
 }
 void Renderer::DefaultEndScreen() noexcept {
 	DrawText("PRESS ENTER TO CONTINUE", textPosX, 200, fontSize_M, YELLOW);
@@ -25,7 +25,7 @@ void Renderer::HighscoreScreen(std::string name) noexcept {
 
 	DrawRectangleRec(textBox, LIGHTGRAY);
 	HighlightTextbox();
-	DrawText(name.c_str(), textBoxX + 5, textBoxY + 8, fontSize_M, MAROON);
+	DrawText(name.c_str(), textBoxX() + 5, textBoxY() + 8, fontSize_M, MAROON);
 	DrawText(TextFormat("INPUT CHARS: %i/%i", name.length(), MAX_INPUT_CHARS - 1), textPosX, 600, fontSize_S, YELLOW);
 
 	if (name.size() < MAX_INPUT_CHARS) {
@@ -37,7 +37,7 @@ void Renderer::HighscoreScreen(std::string name) noexcept {
 		return;
 	}
 	if (!showUnderscoreInTextbox()) { return; }
-	DrawText("_", textBoxX + 8 + MeasureText(name.c_str(), fontSize_M), textBoxY + 12, fontSize_M, MAROON);
+	DrawText("_", textBoxX() + 8 + MeasureText(name.c_str(), fontSize_M), textBoxY() + 12, fontSize_M, MAROON);
 }
 
 void Renderer::UpdatePlayerAnimation() noexcept {

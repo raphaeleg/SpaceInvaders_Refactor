@@ -9,12 +9,10 @@ void Player::Update() {
 	else if (IsKeyDown(KEY_RIGHT)) {
 		movement = 1;
 	}
-	x_pos += speed * movement;
-	x_pos = std::clamp(x_pos, PLAYER_RADIUS, SCREEN_WIDTH - PLAYER_RADIUS);
+	position.x += speed * movement;
+	position.x = std::clamp(position.x, PLAYER_RADIUS, GetScreenWidthF() - PLAYER_RADIUS);
 }
 
 void Player::Render(Texture2D texture) noexcept {
-	const Rectangle DT_src = { 0,0,static_cast<float>(texture.width), static_cast<float>(texture.height) };
-	const Rectangle DT_dst = { x_pos, SCREEN_HEIGHT - PLAYER_BASE_HEIGHT, 100, 100 };
-	DrawTexturePro(texture, DT_src, DT_dst, DT_o, 0, WHITE);
+	DrawTexture(texture, static_cast<int>(position.x - (texture.width / 2.0f)), static_cast<int>(position.y - (texture.height / 2.0f)), WHITE);
 }

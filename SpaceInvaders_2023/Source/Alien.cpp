@@ -1,19 +1,16 @@
 #include "Alien.hpp"
-#include "Helper.hpp"
 #include <corecrt_math.h>
 
-
 void Alien::Update() noexcept {
-	position.x += speed;
-	if (position.x <= 0 || position.x >= SCREEN_WIDTH)
-	{
-		speed = speed < 0 ? abs(speed) : -speed;
-		position.y += 50;
+	position.x += velocity;
+	if (IsPositionAtScreenEdge()) {
+		GoForward();
 	}
 }
-
+void Alien::GoForward() noexcept {
+	velocity = velocity < 0 ? abs(velocity) : -velocity;
+	position.y += 50;
+}
 void Alien::Render(Texture2D texture) noexcept {
-	const Rectangle DT_src = { 0,0,static_cast<float>(texture.width), static_cast<float>(texture.height) };
-	const Rectangle DT_dst = { position.x, position.y, 100, 100 };
-	DrawTexturePro(texture, DT_src, DT_dst, DT_o, 0, WHITE);
+	DrawTexture(texture, static_cast<int>(position.x - (texture.width / 2.0f)), static_cast<int>(position.y - (texture.height / 2.0f)), WHITE);
 }

@@ -34,19 +34,17 @@ struct Resources {
 	const OwnTexture alienTexture{ "Assets/Alien.png" };
 	const OwnTexture barrierTexture{ "Assets/Barrier.png" };
 	const OwnTexture laserTexture{ "Assets/Laser.png" };
+	const OwnTexture shipTexture1{ "Assets/Ship1.png" };
+	const OwnTexture shipTexture2{ "Assets/Ship2.png" };
+	const OwnTexture shipTexture3{ "Assets/Ship3.png" };
 	[[nodiscard]] Texture2D GetAlien() const noexcept { return alienTexture.Get(); }
 	[[nodiscard]] Texture2D GetWall() const noexcept { return barrierTexture.Get(); }
 	[[nodiscard]] Texture2D GetProjectile() const noexcept { return laserTexture.Get(); }
 	[[nodiscard]] Texture2D GetShip(std::size_t i) const noexcept { 
-		if (i >= shipTextures.size()) { return shipTextures.front().Get(); }
-		//TODO: supress the warnings
-		return shipTextures[i].Get();
-	}
-
-	//TODO: supress warning. This should throw
-	Resources() {
-		shipTextures.emplace_back(OwnTexture("Assets/Ship1.png"));
-		shipTextures.emplace_back(OwnTexture("Assets/Ship2.png"));
-		shipTextures.emplace_back(OwnTexture("Assets/Ship3.png"));
+		switch (i) {
+		case 1: return shipTexture2._tex;
+		case 2: return shipTexture3._tex;
+		default: return shipTexture1._tex;
+		}
 	}
 };

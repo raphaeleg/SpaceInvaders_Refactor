@@ -1,9 +1,9 @@
 #include "raylib.h"
 #include "game.hpp"
-#include "Helper.hpp"
+#include "Window.hpp"
 
 int main(void) {
-	InitWindow(SCREEN_WIDTH_INT, SCREEN_HEIGHT_INT, "SPACE INVADERS");
+	Window window{ 1920, 1080, "SPACE INVADERS" };
 	SetTargetFPS(60);
 	Game game = Game();
 
@@ -14,8 +14,5 @@ int main(void) {
 		game.Render();
 		EndDrawing();
 	}
-
-	CloseWindow();
-
 	return 0;
 }

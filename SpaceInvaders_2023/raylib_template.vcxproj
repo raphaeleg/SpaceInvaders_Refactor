@@ -189,6 +189,7 @@
     <ClInclude Include="Source\Renderer.hpp" />
     <ClInclude Include="Source\Resources.hpp" />
     <ClInclude Include="Source\Wall.hpp" />
+    <ClInclude Include="Source\Window.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

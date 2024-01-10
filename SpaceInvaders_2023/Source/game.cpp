@@ -90,9 +90,9 @@ void Game::SpawnWalls() {
 void Game::SpawnAliens() {
 	for (int row = 0; row < aliensFormationHeight; row++) {
 		for (int col = 0; col < aliensFormationWidth; col++) {
-			Aliens.push_back(
-				Alien(aliensFormationX + 450.0f + (col * alienSpacing), aliensFormationY + (row * alienSpacing))
-			);
+			const float posX = aliensFormationX + 450.0f + (col * alienSpacing);
+			const float posY = aliensFormationY + (row * alienSpacing);
+			Aliens.push_back(Alien({posX,posY}));
 		}
 	}
 }
@@ -125,7 +125,7 @@ bool Game::HandledAlienHit(Vector2 projectilePosition) noexcept {
 		return CheckCollision(alien.GetPosition(), ALIEN_RADIUS, projectilePosition);
 		});
 	if (findAlienHit == Aliens.end()) { return false; }
-	Aliens.at(std::distance(Aliens.begin(), findAlienHit)).Kill();
+	Aliens.erase(findAlienHit);
 	leaderboard.AddScore();
 	return true;
 }
@@ -161,7 +161,6 @@ void Game::AliensShoot() {
 void Game::ClearDeadEntities() {
 	Projectiles.erase(std::remove_if(Projectiles.begin(), Projectiles.end(), [](auto v) noexcept { return v.IsDead(); }), Projectiles.end());
 	Walls.erase(std::remove_if(Walls.begin(), Walls.end(), [](auto v) noexcept { return v.IsDead(); }), Walls.end());
-	Aliens.erase(std::remove_if(Aliens.begin(), Aliens.end(), [](auto v) noexcept { return v.IsDead(); }), Aliens.end());
 }
 
 void Game::RenderGameplay() noexcept {

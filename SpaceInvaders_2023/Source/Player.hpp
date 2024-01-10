@@ -6,15 +6,14 @@ class Player {
 private:
 	static constexpr float speed = 7;
 	int lives = 3;
-	float x_pos = SCREEN_WIDTH / 2.0f;
+	Vector2 position = { SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT - PLAYER_BASE_HEIGHT };
 	float timer = 0;
-	static constexpr Vector2 DT_o = { 50,50 };
 
 public:
-	void Render(Texture2D texture) noexcept;
+	void Render(Texture2D texture) const noexcept;
 	void Update();
 	[[nodiscard]] bool IsDead() const noexcept { return lives <= 0; };
-	[[nodiscard]] float GetPosition() const noexcept { return x_pos; };
+	[[nodiscard]] float GetPosition() const noexcept { return position.x; };
 	[[nodiscard]] int GetLives() const noexcept { return lives; };
 	void DecreaseHealth() noexcept { lives--; };
 };

@@ -13,7 +13,7 @@ private:
 public:
     Alien(float x, float y) noexcept;
     void Update() noexcept;
-    void Render(Texture2D texture) noexcept;
+    void Render(Texture2D texture) const noexcept;
     void Kill() noexcept { active = false; }
     [[nodiscard]] bool IsDead() const noexcept { return !active; }
     [[nodiscard]] bool HasReachedYPosition(int boundary) const noexcept { return position.y > boundary; }

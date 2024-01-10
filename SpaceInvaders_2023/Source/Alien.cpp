@@ -16,8 +16,8 @@ void Alien::Update() noexcept {
 	}
 }
 
-void Alien::Render(Texture2D texture) noexcept {
-	const Rectangle DT_src = { 0,0,static_cast<float>(texture.width), static_cast<float>(texture.height) };
-	const Rectangle DT_dst = { position.x, position.y, 100, 100 };
-	DrawTexturePro(texture, DT_src, DT_dst, DT_o, 0, WHITE);
+void Alien::Render(Texture2D texture) const noexcept {
+	const int renderPositionX = static_cast<int>(GetPosition().x - (texture.width / 2.0f));
+	const int renderPositionY = static_cast<int>(GetPosition().y - (texture.height / 2.0f));
+	DrawTexture(texture, renderPositionX, renderPositionY, WHITE);
 }

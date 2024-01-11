@@ -12,7 +12,8 @@ void Game::Start() {
 	gameState = State::GAMEPLAY;
 }
 void Game::End() noexcept {
-	Projectiles.clear();
+	PlayerProjectiles.clear();
+	AlienProjectiles.clear();
 	Walls.clear();
 	Aliens.clear();
 	gameState = State::ENDSCREEN;
@@ -41,8 +42,6 @@ void Game::Update() {
 		HandleProjectileHit();
 		if (IsKeyPressed(KEY_SPACE)) { PlayerShoot(); }
 		AliensShoot();
-
-		ClearDeadEntities();
 		break;
 	case State::ENDSCREEN:
 		if (!leaderboard.IsNewHighScore()) {
@@ -106,21 +105,34 @@ bool Game::IsEndConditionTriggered() noexcept {
 }
 
 void Game::HandleProjectileHit() noexcept {
-	for (auto& projectile : Projectiles) {
-		projectile.Update();
-		const Vector2 projPos = projectile.GetPosition();
-		if (HandledWallHit(projPos)) {
-			projectile.Hit();
-			continue;
-		};
-		if (projectile.IsPlayerProjectile()) {
-			if (HandledAlienHit(projPos)) { projectile.Hit(); }
-			continue;
-		}
-		if (HandledPlayerHit(projPos)) { projectile.Hit(); }
-	}
+	RemoveOutOfScreenProjectiles(PlayerProjectiles);
+	RemoveOutOfScreenProjectiles(AlienProjectiles);
+	RemoveWallHitProjectiles(PlayerProjectiles);
+	RemoveWallHitProjectiles(AlienProjectiles);
+	RemoveAlienHitProjectiles(PlayerProjectiles);
+	RemovePlayerHitProjectiles(AlienProjectiles);
 }
-bool Game::HandledAlienHit(Vector2 projectilePosition) noexcept {
+void Game::RemoveOutOfScreenProjectiles(std::vector<Projectile>& v) noexcept {
+    v.erase(std::remove_if(v.begin(), v.end(), [](const auto& projectile) noexcept {
+        return projectile.isOutOfScreen();
+    }), v.end());
+}
+void Game::RemoveWallHitProjectiles(std::vector<Projectile>& v) noexcept {
+    v.erase(std::remove_if(v.begin(), v.end(), [](const auto& projectile) noexcept {
+        return HandledWallHit(projectile.GetPosition());
+    }), v.end());
+}
+void Game::RemoveAlienHitProjectiles(std::vector<Projectile>& v) noexcept {
+    v.erase(std::remove_if(v.begin(), v.end(), [](const auto& projectile) noexcept {
+        return HandledAlienHit(projectile.GetPosition());
+    }), v.end());
+}
+void Game::RemovePlayerHitProjectiles(std::vector<Projectile>& v) noexcept {
+    v.erase(std::remove_if(v.begin(), v.end(), [](const auto& projectile) noexcept {
+        return HandledPlayerHit(projectile.GetPosition());
+    }), v.end());
+}
+bool Game::IsAlienHit(Vector2 projectilePosition) noexcept {
 	const auto findAlienHit = std::ranges::find_if(Aliens, [&](auto alien) noexcept {
 		return CheckCollision(alien.GetPosition(), ALIEN_RADIUS, projectilePosition);
 		});
@@ -129,13 +141,12 @@ bool Game::HandledAlienHit(Vector2 projectilePosition) noexcept {
 	leaderboard.AddScore();
 	return true;
 }
-bool Game::HandledPlayerHit(Vector2 projectilePosition) noexcept {
-	const Vector2 calcPlayerPos = { player.GetPositionX(), GetScreenHeightF() - PLAYER_BASE_HEIGHT };
-	if (!CheckCollision(calcPlayerPos, PLAYER_RADIUS, projectilePosition)) { return false; }
+bool Game::IsPlayerHit(Vector2 projectilePosition) noexcept {
+	if (!CheckCollision(player.GetPosition(), PLAYER_RADIUS, projectilePosition)) { return false; }
 	player.DecreaseHealth();
 	return true;
 }
-bool Game::HandledWallHit(Vector2 projectilePosition) noexcept {
+bool Game::IsWallHit(Vector2 projectilePosition) noexcept {
 	const auto findWallHit = std::ranges::find_if(Walls, [&](auto wall) noexcept {
 		return CheckCollision(wall.GetPosition(), WALL_RADIUS, projectilePosition);
 		});
@@ -145,9 +156,10 @@ bool Game::HandledWallHit(Vector2 projectilePosition) noexcept {
 	return true;
 }
 
+
 void Game::PlayerShoot() {
 	const auto projectilePos = Vector2{ player.GetPositionX(), GetScreenHeightF() - 130 }; // TODO: find what 130 represents
-	Projectiles.emplace_back(Projectile(projectilePos, true));
+	PlayerProjectiles.emplace_back(Projectile(projectilePos, true));
 }
 void Game::AliensShoot() {
 	shootTimer += 1;
@@ -157,16 +169,14 @@ void Game::AliensShoot() {
 	const int randomAlienIndex = Aliens.size() > 1 ? rand() % Aliens.size() : 0;
 	Vector2 projectilePos = Aliens.at(randomAlienIndex).GetPosition();
 	projectilePos.y += 40; // TODO: find what 40 represents
-	Projectiles.emplace_back(Projectile(projectilePos, false));
-}
-void Game::ClearDeadEntities() {
-	Projectiles.erase(std::remove_if(Projectiles.begin(), Projectiles.end(), [](auto v) noexcept { return v.IsDead(); }), Projectiles.end());
+	AlienProjectiles.emplace_back(Projectile(projectilePos, false));
 }
 
 void Game::RenderGameplay() noexcept {
 	background.Render();
 	player.Render(resources.GetShip(renderer.GetPlayerActiveTexture()));
-	std::ranges::for_each(Projectiles, [&](auto v) noexcept { v.Render(resources.GetProjectile()); });
+	std::ranges::for_each(PlayerProjectiles, [&](auto v) noexcept { v.Render(resources.GetProjectile()); });
+	std::ranges::for_each(AlienProjectiles, [&](auto v) noexcept { v.Render(resources.GetProjectile()); });
 	std::ranges::for_each(Walls, [&](auto v) noexcept { v.Render(resources.GetWall()); });
 	std::ranges::for_each(Aliens, [&](auto v) noexcept { v.Render(resources.GetAlien()); });
 	// TODO: Make this into a Renderer Func

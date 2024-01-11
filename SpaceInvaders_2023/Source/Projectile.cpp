@@ -7,9 +7,6 @@ Projectile::Projectile(Vector2 pos, bool isPlayerProjectile) noexcept {
 
 void Projectile::Update() noexcept {
 	position.y += speed;
-	if (position.y < 0 || position.y > 1500) {
-		active = false;
-	}
 }
 
 void Projectile::Render(Texture2D texture) const noexcept {

@@ -36,6 +36,8 @@ private:
 	static constexpr float aliensFormationY = 50.0f;
 
 	Player player;
+	std::vector<Projectile> PlayerProjectiles;
+	std::vector<Projectile> AlienProjectiles;
 	std::vector<Wall> Walls;
 	std::vector<Alien> Aliens;
 	Background background;
@@ -49,13 +51,18 @@ private:
 	void SpawnAliens();
 	void SpawnWalls();
 
+	// TODO: move all these functions to a separate file of sorts
 	void HandleProjectileHit() noexcept;
-	[[nodiscard]] bool HandledAlienHit(Vector2 projectilePositione) noexcept;
-	[[nodiscard]] bool HandledPlayerHit(Vector2 projectilePosition) noexcept;
-	[[nodiscard]] bool HandledWallHit(Vector2 projectilePosition) noexcept;
+	void RemoveOutOfScreenProjectiles(std::vector<Projectile> &projectiles) noexcept;
+	void RemoveWallHitProjectiles(std::vector<Projectile> &projectiles) noexcept;
+	void RemoveAlienHitProjectiles(std::vector<Projectile> &projectiles) noexcept;
+	void RemovePlayerHitProjectiles(std::vector<Projectile> &projectiles) noexcept;
+	[[nodiscard]] bool IsAlienHit(Vector2 projectilePositione) noexcept;
+	[[nodiscard]] bool IsPlayerHit(Vector2 projectilePosition) noexcept;
+	[[nodiscard]] bool IsWallHit(Vector2 projectilePosition) noexcept;
+	
 	void PlayerShoot();
 	void AliensShoot();
-	void ClearDeadEntities();
 	[[nodiscard]] bool IsEndConditionTriggered() noexcept;
 
 	void RenderGameplay() noexcept;

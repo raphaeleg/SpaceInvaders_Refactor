@@ -13,8 +13,9 @@ public:
 	void Render(Texture2D texture) const noexcept;
 	void Update();
 	[[nodiscard]] bool IsDead() const noexcept { return lives <= 0; };
-	[[nodiscard]] float GetPositionX() const noexcept { return position.x; };
-	[[nodiscard]] float GetPositionY() const noexcept { return position.y; };
+	[[nodiscard]] Vector2 GetPosition() const noexcept { return position; };
+	[[nodiscard]] float GetPositionX() const noexcept { return GetPosition().x; };
+	[[nodiscard]] float GetPositionY() const noexcept { return GetPosition().y; };
 	[[nodiscard]] int GetLives() const noexcept { return lives; };
 	void DecreaseHealth() noexcept { lives--; };
 };

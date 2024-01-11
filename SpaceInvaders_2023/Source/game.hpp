@@ -24,7 +24,6 @@ class Game {
 private:
 	State gameState = { State::STARTSCREEN };
 	float shootTimer = 0;
-	std::string draftHighscoreName = "";
 
 	static constexpr int wallCount = 5;
 	float wallsY = GetScreenHeightF() - 250.0f;
@@ -60,8 +59,6 @@ private:
 	[[nodiscard]] bool IsEndConditionTriggered() noexcept;
 
 	void RenderGameplay() noexcept;
-	[[nodiscard]] bool constexpr isValidInput(int key, size_t len) noexcept { return (key >= 32) && (key <= 125) && (len < MAX_INPUT_CHARS); }
-	void updateHighscoreName();
 
 	unsigned int frameCounter = 0;
 	unsigned int savedframeCounter = 0;

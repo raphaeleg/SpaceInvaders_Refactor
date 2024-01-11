@@ -22,7 +22,6 @@ private:
 	float playerAnimationTimer = 0;
 
 	void HighlightTextbox() noexcept;
-	[[nodiscard]] bool mouseOnText() noexcept { return CheckCollisionPointRec(GetMousePosition(), textBox); }
 	[[nodiscard]] bool showUnderscoreInTextbox() const noexcept { return ((framesCounter / 20) % 2) == 0; }
 	
 public:
@@ -31,4 +30,5 @@ public:
 	void DefaultEndScreen() noexcept;
 	void HighscoreScreen(std::string name) noexcept;
 	[[nodiscard]] int GetPlayerActiveTexture() const noexcept { return playerActiveTexture; }
+	[[nodiscard]] bool mouseOnText() noexcept { return CheckCollisionPointRec(GetMousePosition(), textBox); }
 };

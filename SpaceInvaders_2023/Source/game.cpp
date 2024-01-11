@@ -49,10 +49,9 @@ void Game::Update() {
 			if (IsKeyReleased(KEY_ENTER)) { ShowStartScreen(); }
 			break;
 		}
-		updateHighscoreName();
-		if (IsKeyReleased(KEY_ENTER) && draftHighscoreName.size() > 0 && draftHighscoreName.size() < MAX_INPUT_CHARS) {
-			leaderboard.InsertNewHighScore(draftHighscoreName);
-			draftHighscoreName = "";
+		leaderboard.updateHighscoreName(renderer.mouseOnText());
+		if (IsKeyReleased(KEY_ENTER)) {
+			leaderboard.InsertNewHighScore();
 		}
 		break;
 	default:
@@ -70,7 +69,7 @@ void Game::Render() {
 		break;
 	case State::ENDSCREEN:
 		if (leaderboard.IsNewHighScore()) {
-			renderer.HighscoreScreen(draftHighscoreName);
+			renderer.HighscoreScreen(leaderboard.GetTempHighscoreName());
 			break;
 		}
 		renderer.DefaultEndScreen();
@@ -172,15 +171,6 @@ void Game::RenderGameplay() noexcept {
 
 	DrawText(TextFormat("Score: %i", leaderboard.GetScore()), 50, 20, 40, YELLOW);
 	DrawText(TextFormat("Lives: %i", player.GetLives()), 50, 70, 40, YELLOW);
-}
-void Game::updateHighscoreName() {
-	const int key = GetCharPressed();
-	if (isValidInput(key, std::size(draftHighscoreName))) {
-		draftHighscoreName.push_back(static_cast<char>(key));
-	}
-	if (IsKeyPressed(KEY_BACKSPACE) && !draftHighscoreName.empty()) {
-		draftHighscoreName.pop_back();
-	}
 }
 void Game::UpdateBenchmark() noexcept{
 	const unsigned __int64 now = duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();

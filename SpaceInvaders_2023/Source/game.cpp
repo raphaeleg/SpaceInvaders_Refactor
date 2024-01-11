@@ -2,7 +2,11 @@
 #include "Helper.hpp"
 #include <vector>
 #include <algorithm>
-
+// TODO: URGENT check const validity of all functions and variables, try to const everything
+// TODO: move class functions and variables around so they follow early exits
+// TODO: attempt to const all renderers
+// TODO: remove ALL magic constants in Renderer
+// TODO: remember to remove Benchmark in the end
 void Game::Start() {
 	player = Player();
 	leaderboard.ResetScore();
@@ -177,9 +181,7 @@ void Game::RenderGameplay() noexcept {
 	std::ranges::for_each(AlienProjectiles, [&](auto v) noexcept { v.Render(resources.GetProjectile()); });
 	std::ranges::for_each(Walls, [&](auto v) noexcept { v.Render(resources.GetWall()); });
 	std::ranges::for_each(Aliens, [&](auto v) noexcept { v.Render(resources.GetAlien()); });
-	// TODO: Make this into a Renderer Func
-	DrawText(TextFormat("Score: %i", leaderboard.GetScore()), 50, 20, 40, YELLOW);
-	DrawText(TextFormat("Lives: %i", player.GetLives()), 50, 70, 40, YELLOW);
+	renderer.GameplayText(leaderboard.GetScore(), player.GetLives());
 }
 void Game::UpdateBenchmark() noexcept{
 	const unsigned __int64 now = duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();

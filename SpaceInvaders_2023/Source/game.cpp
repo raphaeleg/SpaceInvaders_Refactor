@@ -37,7 +37,6 @@ void Game::Update() {
 		player.Update();
 		for (auto& alien : Aliens) { alien.Update(); }
 		if (Aliens.size() < 1) { SpawnAliens(); }
-		background.Update(player.GetPositionX());
 
 		HandleProjectileHit();
 		if (IsKeyPressed(KEY_SPACE)) { PlayerShoot(); }
@@ -132,7 +131,7 @@ void Game::RemovePlayerHitProjectiles(std::vector<Projectile>& v) noexcept {
         return HandledPlayerHit(projectile.GetPosition());
     }), v.end());
 }
-bool Game::IsAlienHit(Vector2 projectilePosition) noexcept {
+bool Game::IsAlienHit(Vector2 projectilePosition) noexcept { // TODO: maybe find a better name...
 	const auto findAlienHit = std::ranges::find_if(Aliens, [&](auto alien) noexcept {
 		return CheckCollision(alien.GetPosition(), ALIEN_RADIUS, projectilePosition);
 		});
@@ -156,7 +155,6 @@ bool Game::IsWallHit(Vector2 projectilePosition) noexcept {
 	return true;
 }
 
-
 void Game::PlayerShoot() {
 	const auto projectilePos = Vector2{ player.GetPositionX(), GetScreenHeightF() - 130 }; // TODO: find what 130 represents
 	PlayerProjectiles.emplace_back(Projectile(projectilePos, true));
@@ -173,7 +171,7 @@ void Game::AliensShoot() {
 }
 
 void Game::RenderGameplay() noexcept {
-	background.Render();
+	background.Render(player.GetPosition());
 	player.Render(resources.GetShip(renderer.GetPlayerActiveTexture()));
 	std::ranges::for_each(PlayerProjectiles, [&](auto v) noexcept { v.Render(resources.GetProjectile()); });
 	std::ranges::for_each(AlienProjectiles, [&](auto v) noexcept { v.Render(resources.GetProjectile()); });

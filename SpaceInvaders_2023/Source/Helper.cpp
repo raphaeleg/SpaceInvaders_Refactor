@@ -1,6 +1,5 @@
 #include "Helper.hpp"
 #include "Projectile.hpp"
-#include <corecrt_math.h>
 
 float lineLength(Vector2 A, Vector2 B) noexcept {
 	return sqrtf(static_cast<float>(pow(B.x - A.x, 2) + pow(B.y - A.y, 2)));

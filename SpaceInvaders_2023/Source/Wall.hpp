@@ -10,7 +10,7 @@ private:
 	static constexpr int fontSize = 40;
 
 public:
-	Wall(float posX, float posY) noexcept : position{ posX, posY } {};
+	Wall(const Vector2& pos) noexcept : position(pos) {};
 	void Render(Texture2D texture) const noexcept;
 	void DecreaseHealth() noexcept { health -= 1; };
 	[[nodiscard]] Vector2 GetPosition() const noexcept { return position; };

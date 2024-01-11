@@ -36,7 +36,7 @@ void Game::Update() {
 		player.Update();
 		for (auto& alien : Aliens) { alien.Update(); }
 		if (Aliens.size() < 1) { SpawnAliens(); }
-		background.Update(player.GetPosition());
+		background.Update(player.GetPositionX());
 
 		HandleProjectileHit();
 		if (IsKeyPressed(KEY_SPACE)) { PlayerShoot(); }
@@ -82,24 +82,25 @@ void Game::Render() {
 }
 
 void Game::SpawnWalls() {
-	for (int i = 1; i < wallCount + 1; i++) {
-		Walls.push_back(Wall(wall_distance * i, wallsY));
+	for (int i = 0; i < wallCount; i++) {
+		const auto pos = Vector2{wall_distance * (i+1), wallsY};
+		Walls.emplace_back(Wall(pos));
 	}
 }
 void Game::SpawnAliens() {
 	for (int row = 0; row < aliensFormationHeight; row++) {
 		for (int col = 0; col < aliensFormationWidth; col++) {
-			const float posX = aliensFormationX + 450.0f + (col * alienSpacing);
+			const float posX = aliensFormationX + (col * alienSpacing);
 			const float posY = aliensFormationY + (row * alienSpacing);
-			Aliens.push_back(Alien({posX,posY}));
+			Aliens.emplace_back(Alien({posX,posY}));
 		}
 	}
 }
 
 bool Game::IsEndConditionTriggered() noexcept {
 	bool hasAlienReachedWalls = false;
-	if (Aliens.size() >= 1) {
-		hasAlienReachedWalls = Aliens.at(Aliens.size() - 1).HasReachedYPosition(GetScreenHeight() - static_cast<int>(PLAYER_BASE_HEIGHT));
+	if (Aliens.size() > 0) { // TODO: is this check necessary?
+		hasAlienReachedWalls = Aliens.at(Aliens.size() - 1).HasReachedYPosition(player.GetPositionY());
 	}
 	return IsKeyReleased(KEY_Q) || player.IsDead() || hasAlienReachedWalls;
 }
@@ -129,7 +130,7 @@ bool Game::HandledAlienHit(Vector2 projectilePosition) noexcept {
 	return true;
 }
 bool Game::HandledPlayerHit(Vector2 projectilePosition) noexcept {
-	const Vector2 calcPlayerPos = { player.GetPosition(), GetScreenHeightF() - PLAYER_BASE_HEIGHT };
+	const Vector2 calcPlayerPos = { player.GetPositionX(), GetScreenHeightF() - PLAYER_BASE_HEIGHT };
 	if (!CheckCollision(calcPlayerPos, PLAYER_RADIUS, projectilePosition)) { return false; }
 	player.DecreaseHealth();
 	return true;
@@ -139,27 +140,27 @@ bool Game::HandledWallHit(Vector2 projectilePosition) noexcept {
 		return CheckCollision(wall.GetPosition(), WALL_RADIUS, projectilePosition);
 		});
 	if (findWallHit == Walls.end()) { return false; }
-	Walls.at(std::distance(Walls.begin(), findWallHit)).DecreaseHealth();
+	findWallHit->DecreaseHealth();
+	if (findWallHit->IsDead()) { Walls.erase(findWallHit); }
 	return true;
 }
 
 void Game::PlayerShoot() {
-	const Vector2 projectilePos = { player.GetPosition(), GetScreenHeightF() - 130 };
-	Projectiles.push_back(Projectile(projectilePos, true));
+	const auto projectilePos = Vector2{ player.GetPositionX(), GetScreenHeightF() - 130 }; // TODO: find what 130 represents
+	Projectiles.emplace_back(Projectile(projectilePos, true));
 }
 void Game::AliensShoot() {
 	shootTimer += 1;
-	if (shootTimer < 60) { return; }
+	if (shootTimer < SHOOT_DELAY) { return; }
 	shootTimer = 0;
 
 	const int randomAlienIndex = Aliens.size() > 1 ? rand() % Aliens.size() : 0;
 	Vector2 projectilePos = Aliens.at(randomAlienIndex).GetPosition();
-	projectilePos.y += 40;
-	Projectiles.push_back(Projectile(projectilePos, false));
+	projectilePos.y += 40; // TODO: find what 40 represents
+	Projectiles.emplace_back(Projectile(projectilePos, false));
 }
 void Game::ClearDeadEntities() {
 	Projectiles.erase(std::remove_if(Projectiles.begin(), Projectiles.end(), [](auto v) noexcept { return v.IsDead(); }), Projectiles.end());
-	Walls.erase(std::remove_if(Walls.begin(), Walls.end(), [](auto v) noexcept { return v.IsDead(); }), Walls.end());
 }
 
 void Game::RenderGameplay() noexcept {
@@ -168,7 +169,7 @@ void Game::RenderGameplay() noexcept {
 	std::ranges::for_each(Projectiles, [&](auto v) noexcept { v.Render(resources.GetProjectile()); });
 	std::ranges::for_each(Walls, [&](auto v) noexcept { v.Render(resources.GetWall()); });
 	std::ranges::for_each(Aliens, [&](auto v) noexcept { v.Render(resources.GetAlien()); });
-
+	// TODO: Make this into a Renderer Func
 	DrawText(TextFormat("Score: %i", leaderboard.GetScore()), 50, 20, 40, YELLOW);
 	DrawText(TextFormat("Lives: %i", player.GetLives()), 50, 70, 40, YELLOW);
 }

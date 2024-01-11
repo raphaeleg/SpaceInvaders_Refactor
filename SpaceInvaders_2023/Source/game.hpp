@@ -24,6 +24,7 @@ class Game {
 private:
 	State gameState = { State::STARTSCREEN };
 	float shootTimer = 0;
+	static constexpr float SHOOT_DELAY = 60;
 
 	static constexpr int wallCount = 5;
 	float wallsY = GetScreenHeightF() - 250.0f;
@@ -31,11 +32,10 @@ private:
 	static constexpr int aliensFormationWidth = 8;
 	static constexpr int aliensFormationHeight = 5;
 	static constexpr float alienSpacing = 80.0f;
-	static constexpr float aliensFormationX = 100.0f;
+	static constexpr float aliensFormationX = 550.0f;
 	static constexpr float aliensFormationY = 50.0f;
 
 	Player player;
-	std::vector<Projectile> Projectiles;
 	std::vector<Wall> Walls;
 	std::vector<Alien> Aliens;
 	Background background;

@@ -1,10 +1,10 @@
 #include "Renderer.hpp"
 
-void Renderer::StartScreen() noexcept {
+void Renderer::StartScreen() const noexcept {
 	DrawText("SPACE INVADERS", 200, 100, fontSize_XL, YELLOW);
 	DrawText("PRESS SPACE TO BEGIN", 200, 350, fontSize_M, YELLOW);
 }
-void Renderer::GameplayText(int score, int lives) noexcept {
+void Renderer::GameplayText(int score, int lives) const noexcept {
 	DrawText(TextFormat("Score: %i", score), textPosX_left, 20, fontSize_M, YELLOW);
 	DrawText(TextFormat("Lives: %i", lives), textPosX_left, 70, fontSize_M, YELLOW);
 }
@@ -19,7 +19,7 @@ void Renderer::HighlightTextbox() noexcept {
 	framesCounter = 0;
 	DrawRectangleLines(textBoxX(), textBoxY(), textBoxWidth(), textBoxHeight(), DARKGRAY);
 }
-void Renderer::DefaultEndScreen() noexcept {
+void Renderer::DefaultEndScreen() const noexcept {
 	DrawText("PRESS ENTER TO CONTINUE", textPosX, 200, fontSize_M, YELLOW);
 	DrawText("LEADERBOARD", textPosX_left, 100, fontSize_M, YELLOW);
 }

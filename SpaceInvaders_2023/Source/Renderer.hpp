@@ -30,8 +30,8 @@ public:
 	[[nodiscard]] bool mouseOnText() const noexcept { return CheckCollisionPointRec(GetMousePosition(), textBox); }
 	
 	void UpdatePlayerAnimation() noexcept;
-	void StartScreen() noexcept;
-	void GameplayText(int score, int lives) noexcept;
-	void DefaultEndScreen() noexcept;
+	void StartScreen() const noexcept;
+	void GameplayText(int score, int lives) const noexcept;
+	void DefaultEndScreen() const noexcept;
 	void HighscoreScreen(std::string name, int maxChar) noexcept;
 };

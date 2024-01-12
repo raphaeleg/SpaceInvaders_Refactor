@@ -35,15 +35,15 @@ private:
 	static constexpr float aliensFormationX = 550.0f;
 	static constexpr float aliensFormationY = 50.0f;
 
+	Resources resources{};
+	Renderer renderer{};
 	Player player{};
+	Leaderboard leaderboard{};
+	Background background{};
 	std::vector<Projectile> PlayerProjectiles;
 	std::vector<Projectile> AlienProjectiles;
 	std::vector<Wall> Walls;
 	std::vector<Alien> Aliens;
-	Background background{};
-	Leaderboard leaderboard{};
-	Resources resources{};
-	Renderer renderer{};
 
 	void Start();
 	void End() noexcept;
@@ -65,7 +65,7 @@ private:
 	void AliensShoot();
 	[[nodiscard]] bool IsEndGameConditionTriggered() noexcept;
 
-	void RenderGameplay() noexcept;
+	void RenderGameplay() const noexcept;
 public:
 	void Update();
 	void Render() noexcept;

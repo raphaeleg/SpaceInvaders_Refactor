@@ -50,7 +50,7 @@ void Game::Update() {
 			if (IsKeyReleased(KEY_ENTER)) { ShowStartScreen(); }
 			break;
 		}
-		leaderboard.UpdateHighscoreNameValidValid(renderer.mouseOnText());
+		leaderboard.UpdateHighscoreName(renderer.mouseOnText());
 		if (IsKeyReleased(KEY_ENTER) && leaderboard.IsHighscoreNameValid()) {
 			leaderboard.InsertNewHighScore();
 		}
@@ -178,7 +178,7 @@ void Game::AliensShoot() {
 	AlienProjectiles.emplace_back(Projectile(projectilePos, false));
 }
 
-void Game::RenderGameplay() noexcept {
+void Game::RenderGameplay() const noexcept {
 	background.Render(player.GetPosition(), {0,PLAYER_BASE_HEIGHT});
 	player.Render(resources.GetShip(renderer.GetPlayerActiveTexture()));
 	std::ranges::for_each(PlayerProjectiles, [&](auto v) noexcept { v.Render(resources.GetProjectile()); });

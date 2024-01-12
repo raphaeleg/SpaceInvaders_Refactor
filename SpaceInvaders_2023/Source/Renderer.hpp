@@ -18,12 +18,12 @@ private:
 	float playerAnimationTimer = 0;
 
 	void HighlightTextbox() noexcept;
-	[[nodiscard]] bool showUnderscoreInTextbox() const noexcept { return ((framesCounter / 20) % 2) == 0; }
+	[[nodiscard]] bool ShowUnderscoreInTextbox() const noexcept { return ((framesCounter / 20) % 2) == 0; }
 
-	[[nodiscard]] bool textBoxX() const noexcept { return static_cast<int>(textBox.x); }
-	[[nodiscard]] bool textBoxY() const noexcept { return static_cast<int>(textBox.y); }
-	[[nodiscard]] bool textBoxWidth() const noexcept { return static_cast<int>(textBox.width); }
-	[[nodiscard]] bool textBoxHeight() const noexcept { return static_cast<int>(textBox.height); }
+	[[nodiscard]] constexpr int textBoxX() noexcept { return static_cast<int>(textBox.x); }
+	[[nodiscard]] constexpr int textBoxY() const noexcept { return static_cast<int>(textBox.y); }
+	[[nodiscard]] constexpr int textBoxWidth() const noexcept { return static_cast<int>(textBox.width); }
+	[[nodiscard]] constexpr int textBoxHeight() const noexcept { return static_cast<int>(textBox.height); }
 
 public:
 	[[nodiscard]] int GetPlayerActiveTexture() const noexcept { return playerActiveTexture; }
@@ -33,5 +33,5 @@ public:
 	void StartScreen() noexcept;
 	void GameplayText(int score, int lives) noexcept;
 	void DefaultEndScreen() noexcept;
-	void HighscoreScreen(std::string name) noexcept;
+	void HighscoreScreen(std::string name, int maxChar) noexcept;
 };

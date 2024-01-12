@@ -2,11 +2,9 @@
 #include "Helper.hpp"
 #include <vector>
 #include <algorithm>
-// TODO: URGENT check const validity of all functions and variables, try to const everything
 // TODO: move class functions and variables around so they follow early exits
-// TODO: attempt to const all renderers
-// TODO: remove ALL magic constants in Renderer
-// TODO: remember to remove Benchmark in the end
+// TODO: attempt to const all renderers, check all functions const validity
+// TODO: remove ALL magic constants in Renderer, figure out what they represent if any
 void Game::Start() {
 	player = Player();
 	leaderboard.ResetScore();
@@ -27,23 +25,24 @@ void Game::ShowStartScreen() noexcept {
 }
 
 void Game::Update() {
-	UpdateBenchmark();
 	switch (gameState) {
 	case State::STARTSCREEN:
 		if (IsKeyReleased(KEY_SPACE)) { Start(); }
 		break;
 	case State::GAMEPLAY:
-		if (IsEndConditionTriggered()) {
+		if (IsEndGameConditionTriggered()) {
 			End();
 			break;
 		}
 		renderer.UpdatePlayerAnimation();
 		player.Update();
 		for (auto& alien : Aliens) { alien.Update(); }
-		if (Aliens.size() < 1) { SpawnAliens(); }
+		std::ranges::for_each(PlayerProjectiles, [&](auto &v) noexcept { v.Update(); });
+		std::ranges::for_each(AlienProjectiles, [&](auto &v) noexcept { v.Update(); });
 
 		HandleProjectileHit();
 		if (IsKeyPressed(KEY_SPACE)) { PlayerShoot(); }
+		if (Aliens.size() < 1) { SpawnAliens(); }
 		AliensShoot();
 		break;
 	case State::ENDSCREEN:
@@ -51,8 +50,8 @@ void Game::Update() {
 			if (IsKeyReleased(KEY_ENTER)) { ShowStartScreen(); }
 			break;
 		}
-		leaderboard.updateHighscoreName(renderer.mouseOnText());
-		if (IsKeyReleased(KEY_ENTER)) {
+		leaderboard.UpdateHighscoreNameValidValid(renderer.mouseOnText());
+		if (IsKeyReleased(KEY_ENTER) && leaderboard.IsHighscoreNameValid()) {
 			leaderboard.InsertNewHighScore();
 		}
 		break;
@@ -61,7 +60,7 @@ void Game::Update() {
 	}
 }
 
-void Game::Render() {
+void Game::Render() noexcept {
 	switch (gameState) {
 	case State::STARTSCREEN:
 		renderer.StartScreen();
@@ -71,7 +70,7 @@ void Game::Render() {
 		break;
 	case State::ENDSCREEN:
 		if (leaderboard.IsNewHighScore()) {
-			renderer.HighscoreScreen(leaderboard.GetTempHighscoreName());
+			renderer.HighscoreScreen(leaderboard.GetTempHighscoreName(), MAX_INPUT_CHARS);
 			break;
 		}
 		renderer.DefaultEndScreen();
@@ -80,12 +79,11 @@ void Game::Render() {
 	default:
 		break;
 	}
-	DrawText(TextFormat("Benchmark: %i", savedframeCounter), 50, 120, 40, RED);
 }
 
 void Game::SpawnWalls() {
 	for (int i = 0; i < wallCount; i++) {
-		const auto pos = Vector2{wall_distance * (i+1), wallsY};
+		const auto pos = Vector2{wallDistance * (i+1), wallsPositionY};
 		Walls.emplace_back(Wall(pos));
 	}
 }
@@ -99,10 +97,13 @@ void Game::SpawnAliens() {
 	}
 }
 
-bool Game::IsEndConditionTriggered() noexcept {
+bool Game::IsEndGameConditionTriggered() noexcept {
 	bool hasAlienReachedWalls = false;
 	if (Aliens.size() > 0) { // TODO: is this check necessary?
-		hasAlienReachedWalls = Aliens.at(Aliens.size() - 1).HasReachedYPosition(player.GetPositionY());
+#pragma warning(push) // using size()-1 is a good way to ensure we don't check beyond
+#pragma warning(disable:26446)
+		hasAlienReachedWalls = Aliens[Aliens.size() - 1].HasReachedYPosition(player.GetPositionY());
+#pragma warning(pop)
 	}
 	return IsKeyReleased(KEY_Q) || player.IsDead() || hasAlienReachedWalls;
 }
@@ -115,24 +116,24 @@ void Game::HandleProjectileHit() noexcept {
 	RemoveAlienHitProjectiles(PlayerProjectiles);
 	RemovePlayerHitProjectiles(AlienProjectiles);
 }
-void Game::RemoveOutOfScreenProjectiles(std::vector<Projectile>& v) noexcept {
+void Game::RemoveOutOfScreenProjectiles(std::vector<Projectile> &v) noexcept {
     v.erase(std::remove_if(v.begin(), v.end(), [](const auto& projectile) noexcept {
-        return projectile.isOutOfScreen();
+        return projectile.IsOutOfScreen();
     }), v.end());
 }
-void Game::RemoveWallHitProjectiles(std::vector<Projectile>& v) noexcept {
-    v.erase(std::remove_if(v.begin(), v.end(), [](const auto& projectile) noexcept {
-        return HandledWallHit(projectile.GetPosition());
+void Game::RemoveWallHitProjectiles(std::vector<Projectile> &v) noexcept {
+    v.erase(std::remove_if(v.begin(), v.end(), [&](const auto& projectile) noexcept {
+        return IsWallHit(projectile.GetPosition());
     }), v.end());
 }
-void Game::RemoveAlienHitProjectiles(std::vector<Projectile>& v) noexcept {
-    v.erase(std::remove_if(v.begin(), v.end(), [](const auto& projectile) noexcept {
-        return HandledAlienHit(projectile.GetPosition());
+void Game::RemoveAlienHitProjectiles(std::vector<Projectile> &v) noexcept {
+    v.erase(std::remove_if(v.begin(), v.end(), [&](const auto& projectile) noexcept {
+        return IsAlienHit(projectile.GetPosition());
     }), v.end());
 }
-void Game::RemovePlayerHitProjectiles(std::vector<Projectile>& v) noexcept {
-    v.erase(std::remove_if(v.begin(), v.end(), [](const auto& projectile) noexcept {
-        return HandledPlayerHit(projectile.GetPosition());
+void Game::RemovePlayerHitProjectiles(std::vector<Projectile> &v) noexcept {
+    v.erase(std::remove_if(v.begin(), v.end(), [&](const auto& projectile) noexcept {
+        return IsPlayerHit(projectile.GetPosition());
     }), v.end());
 }
 bool Game::IsAlienHit(Vector2 projectilePosition) noexcept { // TODO: maybe find a better name...
@@ -164,31 +165,25 @@ void Game::PlayerShoot() {
 	PlayerProjectiles.emplace_back(Projectile(projectilePos, true));
 }
 void Game::AliensShoot() {
-	shootTimer += 1;
-	if (shootTimer < SHOOT_DELAY) { return; }
-	shootTimer = 0;
+	alienShootTimer += 1;
+	if (alienShootTimer < SHOOT_DELAY) { return; }
+	alienShootTimer = 0;
 
 	const int randomAlienIndex = Aliens.size() > 1 ? rand() % Aliens.size() : 0;
-	Vector2 projectilePos = Aliens.at(randomAlienIndex).GetPosition();
+#pragma warning(push) // randomAlienIndex takes 0 if there's only one alien, and there will always be an alien due to SpawnAlien()
+#pragma warning(disable:26446)
+	Vector2 projectilePos = Aliens[randomAlienIndex].GetPosition();
+#pragma warning(pop)
 	projectilePos.y += 40; // TODO: find what 40 represents
 	AlienProjectiles.emplace_back(Projectile(projectilePos, false));
 }
 
 void Game::RenderGameplay() noexcept {
-	background.Render(player.GetPosition());
+	background.Render(player.GetPosition(), {0,PLAYER_BASE_HEIGHT});
 	player.Render(resources.GetShip(renderer.GetPlayerActiveTexture()));
 	std::ranges::for_each(PlayerProjectiles, [&](auto v) noexcept { v.Render(resources.GetProjectile()); });
 	std::ranges::for_each(AlienProjectiles, [&](auto v) noexcept { v.Render(resources.GetProjectile()); });
 	std::ranges::for_each(Walls, [&](auto v) noexcept { v.Render(resources.GetWall()); });
 	std::ranges::for_each(Aliens, [&](auto v) noexcept { v.Render(resources.GetAlien()); });
 	renderer.GameplayText(leaderboard.GetScore(), player.GetLives());
-}
-void Game::UpdateBenchmark() noexcept{
-	const unsigned __int64 now = duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-	frameCounter += 1;
-	if ((now - frameStartTime) >= 1000) {
-		frameStartTime = now;
-		savedframeCounter = frameCounter;
-		frameCounter = 0;
-	}
 }

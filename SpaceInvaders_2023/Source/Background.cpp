@@ -8,7 +8,7 @@ Background::Background() noexcept {
 		Stars.emplace_back(Star(tmpPos, tmpSize));
 	}
 }
-void Background::Render(Vector2 playerPosition) const noexcept {
+void Background::Render(const Vector2& playerPosition, const Vector2& cornerPosition) const noexcept {
 	const auto offset = lineLength(playerPosition, cornerPosition) * -1;
 	for (const auto& star : Stars) {
 		star.Render(offset / 15);

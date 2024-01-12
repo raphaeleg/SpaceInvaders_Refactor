@@ -6,7 +6,7 @@ class Wall {
 private:
 	Vector2 position;
 	int health = 50;
-	Vector2 healthTextPosition = { position.x - 21, position.y + 10 };
+	Vector2 healthTextPosition = { GetPosition().x - 21, GetPosition().y + 10};
 	static constexpr int fontSize = 40;
 
 public:

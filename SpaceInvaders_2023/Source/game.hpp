@@ -23,27 +23,27 @@ enum struct State {
 class Game {
 private:
 	State gameState = { State::STARTSCREEN };
-	float shootTimer = 0;
+	float alienShootTimer = 0;
 	static constexpr float SHOOT_DELAY = 60;
 
 	static constexpr int wallCount = 5;
-	float wallsY = GetScreenHeightF() - 250.0f;
-	float wall_distance = GetScreenWidthF() / (wallCount + 1.0f);
+	float wallsPositionY = GetScreenHeightF() - 250.0f;
+	float wallDistance = GetScreenWidthF() / (wallCount + 1.0f);
 	static constexpr int aliensFormationWidth = 8;
 	static constexpr int aliensFormationHeight = 5;
 	static constexpr float alienSpacing = 80.0f;
 	static constexpr float aliensFormationX = 550.0f;
 	static constexpr float aliensFormationY = 50.0f;
 
-	Player player;
+	Player player{};
 	std::vector<Projectile> PlayerProjectiles;
 	std::vector<Projectile> AlienProjectiles;
 	std::vector<Wall> Walls;
 	std::vector<Alien> Aliens;
-	Background background;
-	Leaderboard leaderboard = Leaderboard();
-	Resources resources = Resources();
-	Renderer renderer = Renderer();
+	Background background{};
+	Leaderboard leaderboard{};
+	Resources resources{};
+	Renderer renderer{};
 
 	void Start();
 	void End() noexcept;
@@ -63,15 +63,10 @@ private:
 	
 	void PlayerShoot();
 	void AliensShoot();
-	[[nodiscard]] bool IsEndConditionTriggered() noexcept;
+	[[nodiscard]] bool IsEndGameConditionTriggered() noexcept;
 
 	void RenderGameplay() noexcept;
-
-	unsigned int frameCounter = 0;
-	unsigned int savedframeCounter = 0;
-	unsigned __int64 frameStartTime = duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-	void UpdateBenchmark() noexcept;
 public:
 	void Update();
-	void Render();
+	void Render() noexcept;
 };

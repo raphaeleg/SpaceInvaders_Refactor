@@ -4,7 +4,7 @@
 #include <algorithm>
 
 void Leaderboard::InsertNewHighScore() {
-	if (!tempHighscoreNameIsValid()) { return; }
+	if (!IsHighscoreNameValid()) { return; }
 	PlayerData newData{ tempHighscoreName, score };
 	records.emplace_back(newData);
 	std::ranges::sort(records, std::ranges::greater{}, &PlayerData::score);
@@ -13,10 +13,10 @@ void Leaderboard::InsertNewHighScore() {
 	tempHighscoreName = "";
 }
 
-void Leaderboard::updateHighscoreName(bool isMouseOnText) {
+void Leaderboard::UpdateHighscoreName(bool isMouseOnText) {
 	if (!isMouseOnText) { return; }
 	const auto key = GetCharPressed();
-	if (isValidInput(key) && tempHighscoreName.size() < MAX_INPUT_CHARS) {
+	if (IsValidCharInput(key) && tempHighscoreName.size() < MAX_INPUT_CHARS) {
 #pragma warning(push)
 #pragma warning(disable:26472) // JUSTIFICATION: data loss is acceptable, as we're checking input before converting
 		const auto keyStr = static_cast<char>(key);

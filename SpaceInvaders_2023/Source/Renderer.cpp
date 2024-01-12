@@ -23,25 +23,25 @@ void Renderer::DefaultEndScreen() noexcept {
 	DrawText("PRESS ENTER TO CONTINUE", textPosX, 200, fontSize_M, YELLOW);
 	DrawText("LEADERBOARD", textPosX_left, 100, fontSize_M, YELLOW);
 }
-void Renderer::HighscoreScreen(std::string name) noexcept {
+void Renderer::HighscoreScreen(std::string name, int maxChars) noexcept {
 	DrawText("NEW HIGHSCORE!", textPosX, 300, fontSize_L, YELLOW);
 	DrawText("PLACE MOUSE OVER INPUT BOX!", textPosX, 400, fontSize_S, YELLOW);
 
 	DrawRectangleRec(textBox, LIGHTGRAY);
 	HighlightTextbox();
-	DrawText(name.c_str(), textBoxX() + 5, textBoxY() + 8, fontSize_M, MAROON); // TODO: URGENT remove this c_str()?
-	DrawText(TextFormat("INPUT CHARS: %i/%i", name.length(), MAX_INPUT_CHARS - 1), textPosX, 600, fontSize_S, YELLOW);
+	DrawText(name.data(), textBoxX() + 5, textBoxY() + 8, fontSize_M, MAROON);
+	DrawText(TextFormat("INPUT CHARS: %i/%i", name.size(), maxChars - 1), textPosX, 600, fontSize_S, YELLOW);
 
-	if (name.size() < MAX_INPUT_CHARS) {
+	if (name.size() < maxChars) {
 		DrawText("PRESS ENTER TO CONTINUE", textPosX, 800, fontSize_M, YELLOW);
 	}
 	if (!mouseOnText()) { return; }
-	if (name.length() >= MAX_INPUT_CHARS) {
+	if (name.length() >= maxChars) {
 		DrawText("Press BACKSPACE to delete chars...", textPosX, 650, fontSize_S, YELLOW);
 		return;
 	}
-	if (!showUnderscoreInTextbox()) { return; }
-	DrawText("_", textBoxX() + 8 + MeasureText(name.c_str(), fontSize_M), textBoxY() + 12, fontSize_M, MAROON);
+	if (!ShowUnderscoreInTextbox()) { return; }
+	DrawText("_", textBoxX() + 8 + MeasureText(name.data(), fontSize_M), textBoxY() + 12, fontSize_M, MAROON);
 }
 
 void Renderer::UpdatePlayerAnimation() noexcept {

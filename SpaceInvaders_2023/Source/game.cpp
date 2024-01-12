@@ -99,7 +99,7 @@ void Game::SpawnAliens() {
 
 bool Game::IsEndGameConditionTriggered() noexcept {
 	bool hasAlienReachedWalls = false;
-	if (Aliens.size() > 0) { // TODO: is this check necessary?
+	if (Aliens.size() > 0) {
 #pragma warning(push) // using size()-1 is a good way to ensure we don't check beyond
 #pragma warning(disable:26446)
 		hasAlienReachedWalls = Aliens[Aliens.size() - 1].HasReachedYPosition(player.GetPositionY());

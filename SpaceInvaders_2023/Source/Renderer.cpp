@@ -32,11 +32,11 @@ void Renderer::HighscoreScreen(std::string name, int maxChars) noexcept {
 	DrawText(name.data(), textBoxX() + 5, textBoxY() + 8, fontSize_M, MAROON);
 	DrawText(TextFormat("INPUT CHARS: %i/%i", name.size(), maxChars - 1), textPosX, 600, fontSize_S, YELLOW);
 
-	if (name.size() < maxChars) {
+	if (name.size() > 0 && name.size() < maxChars) {
 		DrawText("PRESS ENTER TO CONTINUE", textPosX, 800, fontSize_M, YELLOW);
 	}
 	if (!mouseOnText()) { return; }
-	if (name.length() >= maxChars) {
+	if (name.size() == maxChars) {
 		DrawText("Press BACKSPACE to delete chars...", textPosX, 650, fontSize_S, YELLOW);
 		return;
 	}

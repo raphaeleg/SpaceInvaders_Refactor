@@ -11,8 +11,6 @@
 #include "Helper.hpp"
 #include <vector>
 #include <string>
-#include <chrono>
-#include <time.h>    
 
 enum struct State {
 	STARTSCREEN,

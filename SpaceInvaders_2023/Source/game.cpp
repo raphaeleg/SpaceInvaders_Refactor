@@ -7,10 +7,10 @@
 // TODO: remove ALL magic constants in Renderer, figure out what they represent if any
 void Game::Start() {
 	player = Player();
+	background = Background();
 	leaderboard.ResetScore();
 	SpawnWalls();
 	SpawnAliens();
-	background = Background();
 	gameState = State::GAMEPLAY;
 }
 void Game::End() noexcept {

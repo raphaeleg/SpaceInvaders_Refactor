@@ -1,12 +1,16 @@
 #include "Renderer.hpp"
 
 void Renderer::StartScreen() const noexcept {
-	DrawText("SPACE INVADERS", 200, 100, fontSize_XL, YELLOW);
-	DrawText("PRESS SPACE TO BEGIN", 200, 350, fontSize_M, YELLOW);
+	constexpr int _textPosX = 200;
+	constexpr int padding = static_cast<int>(textPadding*3.5);
+	DrawText("SPACE INVADERS", _textPosX, textPosY, fontSize_XL, fontColor);
+	DrawText("PRESS SPACE TO BEGIN", _textPosX, textPosY + padding, fontSize_M, fontColor);
 }
 void Renderer::GameplayText(int score, int lives) const noexcept {
-	DrawText(TextFormat("Score: %i", score), textPosX_left, 20, fontSize_M, YELLOW);
-	DrawText(TextFormat("Lives: %i", lives), textPosX_left, 70, fontSize_M, YELLOW);
+	constexpr int _textPosY = 20;
+	constexpr int padding = static_cast<int>(textPadding*0.5);
+	DrawText(TextFormat("Score: %i", score), textPosX_left, _textPosY, fontSize_M, fontColor);
+	DrawText(TextFormat("Lives: %i", lives), textPosX_left, _textPosY + padding, fontSize_M, fontColor);
 }
 void Renderer::HighlightTextbox() noexcept {
 	if (mouseOnText()) {
@@ -20,33 +24,40 @@ void Renderer::HighlightTextbox() noexcept {
 	DrawRectangleLines(textBoxX(), textBoxY(), textBoxWidth(), textBoxHeight(), DARKGRAY);
 }
 void Renderer::DefaultEndScreen() const noexcept {
-	DrawText("PRESS ENTER TO CONTINUE", textPosX, 200, fontSize_M, YELLOW);
-	DrawText("LEADERBOARD", textPosX_left, 100, fontSize_M, YELLOW);
+	DrawText("LEADERBOARD", textPosX_left, textPosY, fontSize_M, fontColor);
+	DrawText("PRESS ENTER TO CONTINUE", textPosX, textPosY + textPadding, fontSize_M, fontColor);
 }
 void Renderer::HighscoreScreen(std::string name, int maxChars) noexcept {
-	DrawText("NEW HIGHSCORE!", textPosX, 300, fontSize_L, YELLOW);
-	DrawText("PLACE MOUSE OVER INPUT BOX!", textPosX, 400, fontSize_S, YELLOW);
+	constexpr int _textPosY = 300;
+	DrawText("NEW HIGHSCORE!", textPosX, _textPosY, fontSize_L, fontColor);
+	DrawText("PLACE MOUSE OVER INPUT BOX!", textPosX, _textPosY + textPadding, fontSize_S, fontColor);
 
 	DrawRectangleRec(textBox, LIGHTGRAY);
 	HighlightTextbox();
 	DrawText(name.data(), textBoxX() + 5, textBoxY() + 8, fontSize_M, MAROON);
-	DrawText(TextFormat("INPUT CHARS: %i/%i", name.size(), maxChars - 1), textPosX, 600, fontSize_S, YELLOW);
+	DrawText(TextFormat("INPUT CHARS: %i/%i", name.size(), maxChars - 1), textPosX, (_textPosY + textPadding * 3), fontSize_S, fontColor);
 
 	if (name.size() > 0 && name.size() < maxChars) {
-		DrawText("PRESS ENTER TO CONTINUE", textPosX, 800, fontSize_M, YELLOW);
+		DrawText("PRESS ENTER TO CONTINUE", textPosX, (_textPosY + textPadding * 4), fontSize_M, fontColor);
 	}
-	if (!mouseOnText()) { return; }
-	if (name.size() == maxChars) {
-		DrawText("Press BACKSPACE to delete chars...", textPosX, 650, fontSize_S, YELLOW);
+	if (!mouseOnText()) { 
+		return; 
+	}
+	else if (name.size() == maxChars) {
+		DrawText("Press BACKSPACE to delete chars...", textPosX, (_textPosY + static_cast<int>(textPadding * 3.5)), fontSize_S, fontColor);
 		return;
 	}
-	if (!ShowUnderscoreInTextbox()) { return; }
+	else if (!ShowUnderscoreInTextbox()) {
+		return; 
+	}
 	DrawText("_", textBoxX() + 8 + MeasureText(name.data(), fontSize_M), textBoxY() + 12, fontSize_M, MAROON);
 }
 
 void Renderer::UpdatePlayerAnimation() noexcept {
 	playerAnimationTimer += GetFrameTime();
-	if (playerAnimationTimer <= animationSpeed) { return; }
+	if (!(playerAnimationTimer > animationSpeed)) {
+		return; 
+	}
 	playerAnimationTimer = 0;
 	playerActiveTexture == 2 ? playerActiveTexture = 0 : playerActiveTexture++;
 }

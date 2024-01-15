@@ -10,7 +10,10 @@ private:
 	static constexpr int fontSize_XL = 160;
 	static constexpr int fontSize_L = 60;
 	static constexpr int fontSize_S = 20;
+	static constexpr Color fontColor = YELLOW;
 	static constexpr int textPosX = 600;
+	static constexpr int textPosY = 100;
+	static constexpr int textPadding = 100;
 
 	int framesCounter = 0;
 	static constexpr float animationSpeed = 0.4f;
@@ -20,10 +23,10 @@ private:
 	void HighlightTextbox() noexcept;
 	[[nodiscard]] bool ShowUnderscoreInTextbox() const noexcept { return ((framesCounter / 20) % 2) == 0; }
 
-	[[nodiscard]] constexpr int textBoxX() noexcept { return static_cast<int>(textBox.x); }
-	[[nodiscard]] constexpr int textBoxY() const noexcept { return static_cast<int>(textBox.y); }
-	[[nodiscard]] constexpr int textBoxWidth() const noexcept { return static_cast<int>(textBox.width); }
-	[[nodiscard]] constexpr int textBoxHeight() const noexcept { return static_cast<int>(textBox.height); }
+	[[nodiscard]] int textBoxX() const noexcept { return static_cast<int>(textBox.x); }
+	[[nodiscard]] int textBoxY() const noexcept { return static_cast<int>(textBox.y); }
+	[[nodiscard]] int textBoxWidth() const noexcept { return static_cast<int>(textBox.width); }
+	[[nodiscard]] int textBoxHeight() const noexcept { return static_cast<int>(textBox.height); }
 
 public:
 	[[nodiscard]] int GetPlayerActiveTexture() const noexcept { return playerActiveTexture; }

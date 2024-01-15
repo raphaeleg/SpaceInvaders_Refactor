@@ -5,7 +5,7 @@
 int main(void) {
 	Window window{ 1920, 1080, "SPACE INVADERS" };
 	SetTargetFPS(60);
-	Game game = Game();
+	Game game{};
 
 	while (!WindowShouldClose()) {
 		game.Update();

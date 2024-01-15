@@ -93,12 +93,18 @@ void Game::Render() noexcept {
 }
 
 void Game::SpawnWalls() {
+	if (Walls.size() > 0) {
+		Walls.clear();
+	}
 	for (int i = 0; i < wallCount; i++) {
 		const auto pos = Vector2{wallDistance * (i+1), wallsPositionY};
 		Walls.emplace_back(Wall(pos));
 	}
 }
 void Game::SpawnAliens() {
+	if (Aliens.size() > 0) {
+		Aliens.clear();
+	}
 	for (int row = 0; row < aliensFormationHeight; row++) {
 		for (int col = 0; col < aliensFormationWidth; col++) {
 			const float posX = aliensFormationX + (col * alienSpacing);

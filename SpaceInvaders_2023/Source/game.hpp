@@ -45,7 +45,7 @@ private:
 
 	void Start();
 	void End() noexcept;
-	void ShowStartScreen() noexcept;
+	void ShowStartScreen() noexcept { gameState = State::STARTSCREEN; }
 	void SpawnAliens();
 	void SpawnWalls();
 

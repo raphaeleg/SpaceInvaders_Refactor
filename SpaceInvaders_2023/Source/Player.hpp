@@ -7,11 +7,10 @@ private:
 	static constexpr float speed = 7;
 	int lives = 3;
 	Vector2 position = { GetScreenWidthF() / 2.0f, GetScreenHeightF() - PLAYER_BASE_HEIGHT };
-	float timer = 0;
 
 public:
-	void Render(Texture2D texture) const noexcept;
 	void Update();
+	void Render(Texture2D texture) const noexcept;
 	[[nodiscard]] bool IsDead() const noexcept { return lives <= 0; };
 	[[nodiscard]] Vector2 GetPosition() const noexcept { return position; };
 	[[nodiscard]] float GetPositionX() const noexcept { return GetPosition().x; };
